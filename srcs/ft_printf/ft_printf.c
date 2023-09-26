@@ -6,11 +6,11 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 23:24:35 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/09/26 13:07:36 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/09/26 13:22:14 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/../../include/ft_printf.h"
+#include "../../include/ft_printf.h"
 
 static int	check_arg(va_list args, const char c)
 {

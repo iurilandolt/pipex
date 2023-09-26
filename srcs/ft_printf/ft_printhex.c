@@ -6,11 +6,11 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 15:12:02 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/09/26 13:06:18 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/09/26 13:22:21 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft_printf.h"
+#include "../../include/ft_printf.h"
 
 static int	ft_puthex(unsigned int i, const char c)
 {
