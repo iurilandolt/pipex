@@ -6,11 +6,11 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 15:52:34 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/09/26 11:46:31 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/09/26 13:06:33 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/ft_printf.h"
+#include "include/ft_printf.h"
 
 int	ft_print_u_nbr(unsigned int n)
 {

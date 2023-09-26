@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 11:21:37 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/09/26 11:53:35 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/09/26 13:00:04 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 # define FT_PRINTF_H
 
-# include "pipex.h"
+# include <stdarg.h>
+# include <unistd.h>
+# include <limits.h>
+# include <stdio.h>
 
 int	ft_printchar(int c);
 int	ft_printstr(char *str);
