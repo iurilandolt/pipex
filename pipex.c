@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 18:07:01 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 19:03:35 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,12 @@ char	*find_path(char **envp, char *cmd)
 	return (clear(paths));
 }
 
-void	execute(char **argv, char **envp)
+void	execute(char *argv, char **envp)
 {
 	char **cmd;
 	char *path;
 
-	argv++;
-	cmd = ft_split(*argv, ' ');
+	cmd = ft_split(argv, ' ');
 	if (!cmd)
 		return ;
 	path = find_path(envp, *cmd);
@@ -56,13 +55,49 @@ void	execute(char **argv, char **envp)
 	clear(cmd);
 }
 
+void	child_process(char **argv, char **envp, int *fd)
+{
+	int		filein;
+
+	filein = open(argv[1], O_RDONLY, 0551);
+	if (filein == -1)
+		exit(1);
+	dup2(fd[1], STDOUT_FILENO);
+	dup2(filein, STDIN_FILENO);
+	close(fd[0]);
+	execute(argv[2], envp);
+}
+
+void	parent_process(char **argv, char **envp, int *fd)
+{
+	int		fileout;
+
+	fileout = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0551);
+	if (fileout == -1)
+		exit(1);
+	dup2(fd[0], STDIN_FILENO);
+	dup2(fileout, STDOUT_FILENO);
+	close(fd[1]);
+	execute(argv[3], envp);
+}
+
 int main(int argc, char **argv, char **envp)
 {
-	if (argc > 1)
+	int		fd[2];
+	pid_t	pid1;
+
+	if (argc == 5)
 	{
-		execute(argv, envp);
+		if (pipe(fd) == -1)
+			exit(1);
+		pid1 = fork();
+		if (pid1 == -1)
+			exit(1);
+		if (pid1 == 0)
+			child_process(argv, envp, fd);
+		waitpid(pid1, NULL, 0);
+		parent_process(argv, envp, fd);
 	}
-	return (0);
 }
 
 
