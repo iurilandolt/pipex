@@ -6,7 +6,7 @@
 #    By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:29:52 by rlandolt          #+#    #+#              #
-#    Updated: 2023/09/26 15:15:56 by rlandolt         ###   ########.fr        #
+#    Updated: 2023/10/05 13:40:21 by rlandolt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,8 @@ NAME = pipex.a
 SRC_PATH = ./srcs
 
 SRC = pipex.c \
+	$(SRC_PATH)/strings.c \
+	$(SRC_PATH)/split.c \
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
