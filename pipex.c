@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 15:46:23 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 18:07:01 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*find_path(char **envp, char *cmd)
 		free(path);
 		if (access(program, F_OK) == 0)
 		{
-			printf("%s\n", program);
+			printf("cmd found at: %s\n", program);
 			clear(paths);
 			return (program);
 		}
@@ -41,17 +41,27 @@ char	*find_path(char **envp, char *cmd)
 	return (clear(paths));
 }
 
+void	execute(char **argv, char **envp)
+{
+	char **cmd;
+	char *path;
+
+	argv++;
+	cmd = ft_split(*argv, ' ');
+	if (!cmd)
+		return ;
+	path = find_path(envp, *cmd);
+	execve(path, cmd, envp);
+	free(path);
+	clear(cmd);
+}
 
 int main(int argc, char **argv, char **envp)
 {
-	(void)argc;
-	char *cmd;
-	char *path;
-
-	cmd = argv[1];
-	path = find_path(envp, cmd);
-	execve(path, &cmd, envp);
-	free(path);
+	if (argc > 1)
+	{
+		execute(argv, envp);
+	}
 	return (0);
 }
 
