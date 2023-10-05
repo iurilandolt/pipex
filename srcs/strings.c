@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:11:48 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 13:35:37 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 14:09:57 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,29 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	if (size - i != 0)
 		*(dest + i) = '\0';
 	return (ft_strlen(src));
+}
+
+char	*ft_strjoin(char const *str1, char const *str2)
+{
+	char	*dest;
+	size_t	len;
+	int		i;
+	int		j;
+
+	if (!str1 || !str2)
+		return (NULL);
+	len = ft_strlen(str1) + ft_strlen(str2);
+	dest = (char *)malloc(sizeof(char) * (len + 1));
+	if (!dest)
+		return (NULL);
+	i = -1;
+	j = 0;
+	while (*(str1 + ++i))
+		*(dest + i) = *(str1 + i);
+	while (str2[j])
+		*(dest + i++) = *(str2 + j++);
+	*(dest + i) = '\0';
+	return (dest);
 }
 
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len)

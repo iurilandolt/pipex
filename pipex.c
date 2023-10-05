@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 13:47:38 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 15:04:24 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,59 @@ int	check_fpermission(const char *filepath)
 		return (0);
 }
 
+void	clear(char **array)
+{
+	int i;
 
+	i = 0;
+	while (array[i])
+		free(array[i++]);
+	free(array);
+}
+
+char	*find_path(char **envp, char *cmd)
+{
+	int		i;
+	char	**paths;
+	char	*path;
+	char	*program;
+
+	i = 0;
+	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+		i++;
+	paths = ft_split(envp[i], ':');
+	printf("these are the splited strings:\n");
+	i = 0;
+
+	while (*(paths + i))
+	{
+		path = ft_strjoin(paths[i], "/");
+		program = ft_strjoin(path, cmd);
+
+		free(path);
+		if (access(program, F_OK) == 0)
+		{
+			printf("%s\n", program);
+			clear(paths);
+			return (program);
+		}
+		free(program);
+		i++;
+	}
+	clean(paths, i);
+	return (NULL);
+}
 
 
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
-	(void)argv;
+	char *cmd;
+	char *path;
 
-	int i;
-	int j;
-	char **paths;
-
-	i = 0;
-	j = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
-		i++;
-	printf("this is the path string:\n%s\n", envp[i]);
-	paths = ft_split(envp[i], ':');
-	printf("these are the splited strings:\n");
-	while (*(paths + j))
-	{
-		printf("%s\n", *(paths + j));
-		j++;
-	}
-	clean(paths, j);
+	cmd = argv[1];
+	path = find_path(envp, cmd);
+	free(path);
 	return (0);
 }
 
