@@ -6,29 +6,11 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 15:04:24 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 15:46:23 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/pipex.h"
-
-int	check_fpermission(const char *filepath)
-{
-	if (access(filepath, R_OK) != -1) // check READ permission.
-		return (1);
-	else
-		return (0);
-}
-
-void	clear(char **array)
-{
-	int i;
-
-	i = 0;
-	while (array[i])
-		free(array[i++]);
-	free(array);
-}
 
 char	*find_path(char **envp, char *cmd)
 {
@@ -41,14 +23,11 @@ char	*find_path(char **envp, char *cmd)
 	while (ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
 	paths = ft_split(envp[i], ':');
-	printf("these are the splited strings:\n");
 	i = 0;
-
 	while (*(paths + i))
 	{
 		path = ft_strjoin(paths[i], "/");
 		program = ft_strjoin(path, cmd);
-
 		free(path);
 		if (access(program, F_OK) == 0)
 		{
@@ -59,8 +38,7 @@ char	*find_path(char **envp, char *cmd)
 		free(program);
 		i++;
 	}
-	clean(paths, i);
-	return (NULL);
+	return (clear(paths));
 }
 
 
@@ -72,6 +50,7 @@ int main(int argc, char **argv, char **envp)
 
 	cmd = argv[1];
 	path = find_path(envp, cmd);
+	execve(path, &cmd, envp);
 	free(path);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 13:38:04 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 14:09:52 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 15:12:11 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 ////// STRINGS //////
 
 char	**ft_split(const char *str, char c);
-char	**clean(char **array, int i);
+void	*clear(char **array);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char	*ft_strjoin(char const *str1, char const *str2);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);

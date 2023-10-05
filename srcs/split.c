@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:15:58 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 13:39:17 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/05 15:12:01 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@ static int	ft_isdelimeter(char str, char c)
 		return (0);
 }
 
-char	**clean(char **array, int i)
+void	*clear(char **array)
 {
-	while (--i >= 0)
-		free(*(array + i));
-	free (array);
+	int i;
+
+	i = 0;
+	while (array[i])
+		free(array[i++]);
+	free(array);
 	return (NULL);
 }
 
@@ -67,7 +70,7 @@ char	**ft_split(const char *str, char c)
 	k = 0;
 	split = (char **)malloc((substr_count(str, c) + 1) * sizeof(char *));
 	if (!str || !split)
-		return (clean(split, k));
+		return (clear(split));
 	while (*(str + i))
 	{
 		if (*(str + i) == c)
@@ -78,7 +81,7 @@ char	**ft_split(const char *str, char c)
 		if (i > j)
 			*(split + k++) = substr_cpy(&str[j], (i - j) + 1);
 		if (!*(split + k - 1))
-			return (clean(split, k));
+			return (clear(split));
 	}
 	*(split + k) = NULL;
 	return (split);
