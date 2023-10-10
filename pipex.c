@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/10 13:13:35 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/10 14:03:03 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ char	*find_path(char **envp, char *cmd)
 	char	*program;
 
 	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
-	paths = ft_split(envp[i], ':');
+	paths = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (*(paths + i))
 	{
@@ -69,7 +69,7 @@ void	child_proc(int *fd, char **argv, char **envp)
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	dup2(filein, STDIN_FILENO);
-	//close(filein);
+	close(filein);
 	execute(argv[2], envp);
 }
 
@@ -83,15 +83,15 @@ void parent_proc(int *fd, char **argv, char**envp)
 	dup2(fd[0], STDIN_FILENO);
 	close(fd[1]);
 	dup2(fileout, STDOUT_FILENO);
-	//close(fileout);
+	close(fileout);
 	execute(argv[3], envp);
 }
 
 
 int main(int argc, char **argv, char **envp)
 {
-	int	fd[2];
-	pid_t proc_id;
+	int		fd[2];
+	pid_t	proc_id;
 
 	if (argc == 5)
 	{
@@ -102,10 +102,11 @@ int main(int argc, char **argv, char **envp)
 			ft_error();
 		if (proc_id == 0)
 			child_proc(fd, argv, envp);
-		else
-			parent_proc(fd, argv, envp);
+		if (waitpid(proc_id, NULL, 0) == -1)
+			ft_error();
+		parent_proc(fd, argv, envp);
 	}
 	else
-		ft_putendl_fd("Error: Bad Arguments", 2);
+		ft_putendl_fd("Error: Bad arguments", 2);
 	return (0);
 }
