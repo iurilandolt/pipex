@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 13:38:04 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 15:12:11 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/10 10:59:48 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 
+#define BUFFER_SIZE 1024
+
 ////// STRINGS //////
 
 char	**ft_split(const char *str, char c);
@@ -28,5 +30,7 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char	*ft_strjoin(char const *str1, char const *str2);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 size_t	ft_strlen(const char *s);
+void	ft_putendl_fd(char *str, int fd);
+void	ft_error(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:15:58 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 15:12:01 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/10 10:38:30 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,7 @@ static int	ft_isdelimeter(char str, char c)
 		return (0);
 }
 
-void	*clear(char **array)
-{
-	int i;
-
-	i = 0;
-	while (array[i])
-		free(array[i++]);
-	free(array);
-	return (NULL);
-}
-
-int	substr_count(const char *str, char c)
+static int	substr_count(const char *str, char c)
 {
 	int	count;
 
@@ -57,6 +46,17 @@ static char	*substr_cpy(const char *src, size_t len)
 		return (NULL);
 	ft_strlcpy(dest, src, len);
 	return (dest);
+}
+
+void	*clear(char **array)
+{
+	int i;
+
+	i = 0;
+	while (array[i])
+		free(array[i++]);
+	free(array);
+	return (NULL);
 }
 
 char	**ft_split(const char *str, char c)

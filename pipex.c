@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/05 19:18:12 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/10 11:19:18 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,58 @@ void	execute(char *argv, char **envp)
 	clear(cmd);
 }
 
+void	child_proc(int *fd, char **argv, char **envp)
+{
+	int		filein;
+	char	buffer[BUFFER_SIZE];
+	int		n;
+
+	filein = open(argv[1], O_RDONLY);
+	if (filein == -1)
+		ft_error();
+	close(fd[0]);
+	while ((n = read(filein, buffer, BUFFER_SIZE)) > 0)
+		write(fd[1], buffer, n);
+	close(filein);
+	close(fd[1]);
+	execute(argv[2], envp);
+}
+
+void parent_proc(int *fd, char **argv, char**envp)
+{
+	int		fileout;
+	char	buffer[BUFFER_SIZE];
+	int		n;
+
+	fileout = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fileout == -1)
+		ft_error();
+	close(fd[1]);
+	while ((n = read(fd[0], buffer, BUFFER_SIZE)) > 0)
+		write(fileout, buffer, BUFFER_SIZE);
+	close(fileout);
+	close(fd[0]);
+	execute(argv[3], envp);
+}
+
 
 int main(int argc, char **argv, char **envp)
 {
+	int	fd[2];
+	pid_t proc_id;
 
+	if (argc == 5)
+	{
+		if (pipe(fd) == -1)
+			return (1);
+		proc_id = fork();
+		if (proc_id == 0)
+			child_proc(fd, argv, envp);
+		waitpid(proc_id, NULL, 0);
+		parent_proc(fd, argv, envp);
+	}
+	else
+		ft_error();
 }
 
 
