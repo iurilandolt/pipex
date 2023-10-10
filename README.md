@@ -79,3 +79,28 @@ void parent_proc(int *fd, char **argv, char**envp)
 	execute(argv[3], envp);
 }
 */
+
+
+#include <unistd.h>
+#include <fcntl.h>
+
+void execute_cmd(char *cmd, char **envp) {
+    char *argv[] = { "/bin/sh", "-c", cmd, NULL };
+    execve(argv[0], argv, envp);
+}
+
+int main(int argc, char **argv, char **envp) {
+    int fd[2], f_in, f_out, pid, i = 2;
+    f_in = open(argv[1], O_RDONLY); f_out = open(argv[argc-1], O_WRONLY | O_CREAT, 0644);
+    dup2(f_in, 0); close(f_in); // Redirect stdin to infile
+    while (i < argc - 1) {
+        pipe(fd);
+        if ((pid = fork()) == 0) {
+            dup2(fd[1], 1); close(fd[0]); execute_cmd(argv[i], envp); }
+        else { wait(NULL); close(fd[1]); dup2(fd[0], 0); close(fd[0]); }
+        i++;
+    }
+    dup2(f_out, 1); close(f_out); // Redirect stdout to outfile
+    execute_cmd(argv[i], envp);
+    return (0);
+}
