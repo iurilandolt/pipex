@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/11 13:22:15 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/11 14:56:58 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,9 @@ int main(int argc, char **argv, char **envp)
 		parent_proc(fd, argv, envp);
 	}
 	else
+	{
 		ft_putendl_fd("Error: Bad arguments", 2);
+		exit(EXIT_FAILURE);
+	}
 	return (0);
 }
