@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 13:38:04 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/11 20:40:22 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/11 23:27:31 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
-
-typedef struct s_pipe_node {
-	int			fd[2];
-	pid_t		p_id;
-	t_pipe_node *next;
-}	t_pipe_node;
 
 ////// STRINGS //////
 

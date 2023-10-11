@@ -105,3 +105,7 @@ int main(int argc, char **argv, char **envp) {
     execute_cmd(argv[i], envp);
     return (0);
 }
+
+
+< infile.txt ps aux | grep -v 0:00 | sort -k3 -r | head -n 10 > outfile.txt
+./pipex infile.txt "ps aux" "grep -v '0:00'" "sort -k3" "head -n 10" outfile.txt

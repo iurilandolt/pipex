@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 16:04:56 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/11 20:56:54 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/12 00:35:08 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	execute(char *argv, char **envp)
 		ft_error();
 	path = find_path(envp, *cmd);
 	if (!path)
-		ft_error();
+		path_error(argv);
 	if (execve(path, cmd, envp) == -1)
 	{
 		free(path);
@@ -61,103 +61,55 @@ void	execute(char *argv, char **envp)
 	}
 }
 
-t_pipe_node *build_pipe(void)
-{
-	t_pipe_node *new;
-
-	new = (t_pipe_node *)malloc(sizeof(t_pipe_node));
-	if (!new)
-		exit(0);
-	return (new);
-}
-
-t_pipe_node *pipeline(int argc)
-{
-	t_pipe_node *first;
-	t_pipe_node *new;
-	t_pipe_node *last;
-	int i;
-
-	i = 0;
-	while (i < argc - 3)
-	{
-		if (i == 0)
-		{
-			first = build_pipe();
-			last = first;
-		}
-		else
-		{
-			new = build_pipe();
-			last->next = new;
-			last = new;
-		}
-	}
-	return(new);
-}
-
-int main(int argc, char **argv, char **envp)
-{
-	t_pipe_node *pipe;
-	(void)argv;
-	(void)envp;
-
-	if (argc >= 5)
-	{
-		pipe = pipeline(argc);
-
-	}
-	else
-		ft_putendl_fd("\033[31mError: Bad arguments\n\e[0m", 2);
-	return (0);
-}
-
-
-/*
-int main(int argc, char **argv, char **envp)
+void	child_process(char *argv, char **envp)
 {
 	int		fd[2];
-	int		infile;
-	int		outfile;
-	int		i;
 	pid_t	proc_id;
 
+	if (pipe(fd) == -1)
+		ft_error();
+	proc_id = fork();
+	if (proc_id == -1)
+		ft_error();
+	if (proc_id == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		execute(argv, envp);
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		waitpid(proc_id, NULL, 0);
+	}
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	int		filein;
+	int		fileout;
+	int		i;
 
 	if (argc >= 5)
 	{
-		infile = open(argv[1], O_RDONLY);
-		outfile = open(argv[argc - 1], O_WRONLY, O_CREAT, 0644);
-		if (infile == -1 || outfile == -1)
-			ft_error();
 		i = 2;
-		dup2(infile, STDIN_FILENO);
-		close(infile);
-		while (i < argc - 1)
-		{
-			if (pipe(fd) == -1)
-				ft_error();
-			proc_id = fork();
-			if (proc_id == -1)
-				ft_error();
-			if (proc_id == 0)
-			{
-				dup2(fd[1], STDOUT_FILENO);
-				close(fd[0]);
-				execute(argv[i], envp);
-			}
-			if (waitpid(proc_id, NULL, 0) == -1)
-				ft_error();
-			close(fd[1]);
-			dup2(fd[0], STDIN_FILENO);
-			close(fd[0]);
-			i++;
-		}
-		dup2(outfile, STDOUT_FILENO);
-		close(outfile);
-		execute(argv[i], envp);
+		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		filein = open(argv[1], O_RDONLY , 0644);
+		if (filein == -1 || fileout == -1)
+			ft_error();
+		dup2(filein, STDIN_FILENO);
+		while (i < argc - 2)
+			child_process(argv[i++], envp);
+		dup2(fileout, STDOUT_FILENO);
+		execute(argv[argc - 2], envp);
 	}
 	else
-		ft_putendl_fd("\033[31mError: Bad arguments\n\e[0m", 2);
+	{
+		ft_putendl_fd("ambiguous redirect", 2);
+		ft_putendl_fd("Try ./pipex file1 'cmd1' 'cmd2' file2", 2);
+		exit(EXIT_FAILURE);
+	}
 	return (0);
 }
-*/
+
