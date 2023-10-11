@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/11 14:56:58 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/11 19:44:50 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	execute(char *argv, char **envp)
 		ft_error();
 	path = find_path(envp, *cmd);
 	if (!path)
-		ft_error();
+		path_error(argv);
 	if (execve(path, cmd, envp) == -1)
 	{
 		free(path);
@@ -110,7 +110,8 @@ int main(int argc, char **argv, char **envp)
 	}
 	else
 	{
-		ft_putendl_fd("Error: Bad arguments", 2);
+		ft_putendl_fd("ambiguous redirect", 2);
+		ft_putendl_fd("Try ./pipex file1 'cmd1' 'cmd2' file2", 2);
 		exit(EXIT_FAILURE);
 	}
 	return (0);

@@ -22,6 +22,14 @@ void	ft_putendl_fd(char *str, int fd)
 
 void	ft_error(void)
 {
-	perror("Error.");
+	perror("");
 	exit(EXIT_FAILURE);
+}
+
+void	path_error(char *str)
+{
+
+	ft_putstr_fd(str, 2);
+	ft_putendl_fd(": command not found", 2);
+	exit(127);
 }
