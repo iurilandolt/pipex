@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 16:04:56 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/11 14:54:49 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/11 20:56:54 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,59 @@ void	execute(char *argv, char **envp)
 	}
 }
 
+t_pipe_node *build_pipe(void)
+{
+	t_pipe_node *new;
+
+	new = (t_pipe_node *)malloc(sizeof(t_pipe_node));
+	if (!new)
+		exit(0);
+	return (new);
+}
+
+t_pipe_node *pipeline(int argc)
+{
+	t_pipe_node *first;
+	t_pipe_node *new;
+	t_pipe_node *last;
+	int i;
+
+	i = 0;
+	while (i < argc - 3)
+	{
+		if (i == 0)
+		{
+			first = build_pipe();
+			last = first;
+		}
+		else
+		{
+			new = build_pipe();
+			last->next = new;
+			last = new;
+		}
+	}
+	return(new);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	t_pipe_node *pipe;
+	(void)argv;
+	(void)envp;
+
+	if (argc >= 5)
+	{
+		pipe = pipeline(argc);
+
+	}
+	else
+		ft_putendl_fd("\033[31mError: Bad arguments\n\e[0m", 2);
+	return (0);
+}
+
+
+/*
 int main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
@@ -107,3 +160,4 @@ int main(int argc, char **argv, char **envp)
 		ft_putendl_fd("\033[31mError: Bad arguments\n\e[0m", 2);
 	return (0);
 }
+*/
