@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/10 14:03:03 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:22:15 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*find_path(char **envp, char *cmd)
 	char	*program;
 
 	i = 0;
+	if (ft_strnstr(cmd, "/usr/bin/", 9) != 0)
+		cmd = cmd + 9;
 	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
 	paths = ft_split(envp[i] + 5, ':');
@@ -29,7 +31,7 @@ char	*find_path(char **envp, char *cmd)
 		path = ft_strjoin(paths[i], "/");
 		program = ft_strjoin(path, cmd);
 		free(path);
-		if (access(program, F_OK) == 0)
+		if (access(program, F_OK | X_OK) == 0)
 		{
 			clear(paths);
 			return (program);
