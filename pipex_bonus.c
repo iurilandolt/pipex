@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 16:04:56 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/12 00:35:08 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/12 01:11:26 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	execute(char *argv, char **envp)
 	}
 }
 
-void	child_process(char *argv, char **envp)
+void	child(char *argv, char **envp)
 {
 	int		fd[2];
 	pid_t	proc_id;
@@ -100,7 +100,7 @@ int main(int argc, char **argv, char **envp)
 			ft_error();
 		dup2(filein, STDIN_FILENO);
 		while (i < argc - 2)
-			child_process(argv[i++], envp);
+			child(argv[i++], envp);
 		dup2(fileout, STDOUT_FILENO);
 		execute(argv[argc - 2], envp);
 	}
