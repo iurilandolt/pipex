@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*   old.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/10 16:04:56 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/12 01:11:26 by rlandolt         ###   ########.fr       */
+/*   Created: 2023/09/26 11:38:41 by rlandolt          #+#    #+#             */
+/*   Updated: 2023/10/12 11:45:10 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,48 +61,52 @@ void	execute(char *argv, char **envp)
 	}
 }
 
-void	child(char *argv, char **envp)
+void	child_proc(int *fd, char **argv, char **envp)
+{
+	int		filein;
+
+	filein = open(argv[1], O_RDONLY);
+	if (filein == -1)
+		ft_error();
+	dup2(fd[1], STDOUT_FILENO);
+	close(fd[0]);
+	dup2(filein, STDIN_FILENO);
+	close(filein);
+	execute(argv[2], envp);
+}
+
+void parent_proc(int *fd, char **argv, char**envp)
+{
+	int		fileout;
+
+	fileout = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fileout == -1)
+		ft_error();
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[1]);
+	dup2(fileout, STDOUT_FILENO);
+	close(fileout);
+	execute(argv[3], envp);
+}
+
+
+int main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	proc_id;
 
-	if (pipe(fd) == -1)
-		ft_error();
-	proc_id = fork();
-	if (proc_id == -1)
-		ft_error();
-	if (proc_id == 0)
+	if (argc == 5)
 	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		execute(argv, envp);
-	}
-	else
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		waitpid(proc_id, NULL, 0);
-	}
-}
-
-int main(int argc, char **argv, char **envp)
-{
-	int		filein;
-	int		fileout;
-	int		i;
-
-	if (argc >= 5)
-	{
-		i = 2;
-		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		filein = open(argv[1], O_RDONLY , 0644);
-		if (filein == -1 || fileout == -1)
+		if (pipe(fd) == -1)
 			ft_error();
-		dup2(filein, STDIN_FILENO);
-		while (i < argc - 2)
-			child(argv[i++], envp);
-		dup2(fileout, STDOUT_FILENO);
-		execute(argv[argc - 2], envp);
+		proc_id = fork();
+		if (proc_id == -1)
+			ft_error();
+		if (proc_id == 0)
+			child_proc(fd, argv, envp);
+		if (waitpid(proc_id, NULL, 0) == -1)
+			ft_error();
+		parent_proc(fd, argv, envp);
 	}
 	else
 	{
@@ -112,4 +116,3 @@ int main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-
