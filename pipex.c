@@ -6,19 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 11:45:27 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/12 11:45:50 by rlandolt         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/10 16:04:56 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/12 01:11:26 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/12 17:03:18 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +85,73 @@ void	child(char *argv, char **envp)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int	get_line(char **line)
+{
+	int		i;
+	int		b_read;
+	char	*buffer;;
+
+	i = 0;
+	buffer = (char *)malloc(1024 * sizeof(char));
+	while ((b_read = read(0, buffer + i, 1)) > 0)
+	{
+		if (buffer[i] == '\n' || buffer[i] == '\0')
+			break;
+		i++;
+	}
+	if (b_read > 0)
+	{
+		buffer[i + 1] = '\0';
+		*line = buffer;
+	}
+	free(buffer);
+	return (b_read);
+}
+
+void	doctor(char *eof)
+{
+	int		fd[2];
+	pid_t	proc_id;
+	char	*line;
+
+	if (pipe(fd) == -1)
+		ft_error();
+	proc_id = fork();
+	if (proc_id == -1)
+		ft_error();
+	if (proc_id == 0)
+	{
+		close(fd[0]);
+		while (get_line(&line) > 0)
+		{
+			if (ft_strnstr(line, eof, ft_strlen(line)) != 0)
+				exit(EXIT_SUCCESS);
+			write(fd[1], line, ft_strlen(line)); // putstr_fd instead of write?
+			free(line);
+		}
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		waitpid(proc_id, NULL, 0);
+	}
+}
+
+void	pipe_sequence(int argc, char **argv, char **envp)
 {
 	int		filein;
 	int		fileout;
 	int		i;
 
-	if (argc >= 5)
+	if (ft_strnstr(argv[1], "here_doc", 8) != 0)
+	{
+		//if argc < 6 return)
+		i = 3;
+		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		doctor(argv[2]);
+	}
+	else
 	{
 		i = 2;
 		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -111,10 +159,18 @@ int main(int argc, char **argv, char **envp)
 		if (filein == -1 || fileout == -1)
 			ft_error();
 		dup2(filein, STDIN_FILENO);
-		while (i < argc - 2)
-			child(argv[i++], envp);
-		dup2(fileout, STDOUT_FILENO);
-		execute(argv[argc - 2], envp);
+	}
+	while (i < argc - 2)
+		child(argv[i++], envp);
+	dup2(fileout, STDOUT_FILENO);
+	execute(argv[argc - 2], envp);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	if (argc >= 5)
+	{
+		pipe_sequence(argc, argv, envp);
 	}
 	else
 	{
