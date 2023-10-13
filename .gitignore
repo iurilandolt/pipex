@@ -2,7 +2,7 @@
 *.o
 *.out
 *.md
-*.txt
+outfile.txt
 pipex
 /tster
 /tester
