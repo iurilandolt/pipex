@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 11:45:27 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/12 22:20:22 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/13 17:10:45 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,37 +84,7 @@ void	child(char *argv, char **envp)
 		waitpid(proc_id, NULL, 0);
 	}
 }
-/*
-void	doctor(char *eof)
-{
-	int		fd[2];
-	pid_t	proc_id;
-	char	*line;
 
-	if (pipe(fd) == -1)
-		ft_error();
-	proc_id = fork();
-	if (proc_id == -1)
-		ft_error();
-	if (proc_id == 0)
-	{
-		close(fd[0]);
-		while (get_line(&line) > 0)
-		{
-			if (ft_strnstr(line, eof, ft_strlen(line)) != 0)
-				exit(EXIT_SUCCESS);
-			write(fd[1], line, ft_strlen(line)); // putstr_fd instead of write?
-			free(line);
-		}
-	}
-	else
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		waitpid(proc_id, NULL, 0);
-	}
-}
-*/
 int	get_line(char **line)
 {
 	int		i;
@@ -134,7 +104,7 @@ int	get_line(char **line)
 		buffer[i + 1] = '\0';
 		*line = buffer;
 	}
-	free(buffer);
+	//free(buffer);
 	return (b_read);
 }
 
@@ -145,23 +115,41 @@ void	pipe_sequence(int argc, char **argv, char **envp)
 	int		i;
 	char	*line;
 
+	pid_t	proc_id;
+	int		fd[2];
+
 	if (ft_strnstr(argv[1], "here_doc", 8) != 0 && argc > 5)
 	{
 		i = 3;
-		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		filein = open(argv[1], O_RDONLY , 0644);
-		while (get_line(&line) > 0)
+		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		//call doctor(just a special case parent)
+		if (pipe(fd) == -1)
+			ft_error();
+		proc_id = fork();
+		if (proc_id == -1)
+			ft_error();
+		if (proc_id == 0)
 		{
+			while (get_line(&line) > 0)
+			{
 
 				if (ft_strnstr(line, argv[2], ft_strlen(line)) != 0)
-					break;
+					exit(0);
+				fprintf(stderr, "input recieved: %s\n", line);
+				write(fd[1], line, ft_strlen(line));	//mby use fd_putstr?
+			}
 		}
-		//write(fd[1], line, ft_strlen(line)); // putstr_fd instead of write? STD
-		dup2(filein, STDIN_FILENO);
-		//free(line);
+		else
+		{
+			close(fd[1]);
+			dup2(fd[0], STDIN_FILENO);
+			wait(NULL);
+		}
+
 	}
 	else
 	{
+		//call parent
 		i = 2;
 		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		filein = open(argv[1], O_RDONLY , 0644);
@@ -169,9 +157,12 @@ void	pipe_sequence(int argc, char **argv, char **envp)
 			ft_error();
 		dup2(filein, STDIN_FILENO);
 	}
+	//call childs
 	while (i < argc - 2)
 		child(argv[i++], envp);
+	//dup result of looped pipes by childs
 	dup2(fileout, STDOUT_FILENO);
+	//execute parent with what came from dup
 	execute(argv[argc - 2], envp);
 }
 
