@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 11:45:27 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/13 17:10:45 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/13 19:19:57 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,10 @@ int	get_line(char **line)
 
 	i = 0;
 	buffer = (char *)malloc(1024 * sizeof(char));
+	//this logic is wack, why use i ?
 	while ((b_read = read(0, buffer + i, 1)) > 0)
 	{
+		// do we need this break? since we are using exit() on *eof found?
 		if (buffer[i] == '\n' || buffer[i] == '\0')
 			break;
 		i++;
