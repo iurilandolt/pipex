@@ -6,7 +6,7 @@
 #    By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:29:52 by rlandolt          #+#    #+#              #
-#    Updated: 2023/10/15 22:33:47 by rlandolt         ###   ########.fr        #
+#    Updated: 2023/10/15 22:58:54 by rlandolt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,11 +34,9 @@ all: $(NAME)
 
 clean:
 		rm -f $(OBJ)
-		rm -f $(B_OBJ)
 
 fclean: clean
 		rm -f $(NAME)
-		rm -f $(NAME_B)
 
 re: fclean all
 
