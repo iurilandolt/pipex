@@ -1,7 +1,6 @@
 *.a
 *.o
 *.out
-*.md
 outfile.txt
 pipex
 /tster
