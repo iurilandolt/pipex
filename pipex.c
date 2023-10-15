@@ -6,11 +6,35 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 11:45:27 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/13 19:19:57 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 15:51:05 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/pipex.h"
+
+void validate_path(char **paths, char **cmd)
+{
+	int		i;
+	char	*ptr;
+
+	i = 0;
+	while (*(paths + i))
+	{
+		if (ft_strnstr(*cmd,  *(paths + i), ft_strlen( *(paths + i))) != 0)
+		{
+			ptr = *cmd;
+			while (*ptr)
+			{
+				if (*ptr == '/')
+					*cmd = ptr + 1;
+				ptr++;
+			}
+			return;
+		}
+		i++;
+	}
+	return;
+}
 
 char	*find_path(char **envp, char *cmd)
 {
@@ -20,11 +44,11 @@ char	*find_path(char **envp, char *cmd)
 	char	*program;
 
 	i = 0;
-	if (ft_strnstr(cmd, "/usr/bin/", 9) != 0)
-		cmd = cmd + 9;
+
 	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
 	paths = ft_split(envp[i] + 5, ':');
+	validate_path(paths, &cmd);
 	i = 0;
 	while (*(paths + i))
 	{
@@ -110,6 +134,36 @@ int	get_line(char **line)
 	return (b_read);
 }
 
+void	call_doc(char **argv)
+{
+	pid_t	proc_id;
+	int		fd[2];
+	char	*line;
+
+	if (pipe(fd) == -1)
+		ft_error();
+	proc_id = fork();
+	if (proc_id == -1)
+		ft_error();
+	if (proc_id == 0)
+	{
+		while (get_line(&line) > 0)
+		{
+
+			if (ft_strnstr(line, argv[2], ft_strlen(line)) != 0)
+				exit(0);
+			fprintf(stderr, "input recieved: %s\n", line);
+			write(fd[1], line, ft_strlen(line));	//mby use fd_putstr?
+		}
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		wait(NULL);
+	}
+}
+
 void	pipe_sequence(int argc, char **argv, char **envp)
 {
 	int		filein;
@@ -117,14 +171,17 @@ void	pipe_sequence(int argc, char **argv, char **envp)
 	int		i;
 	char	*line;
 
-	pid_t	proc_id;
-	int		fd[2];
+
 
 	if (ft_strnstr(argv[1], "here_doc", 8) != 0 && argc > 5)
 	{
 		i = 3;
 		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		//call doctor(just a special case parent)
+
+		pid_t	proc_id;
+		int		fd[2];
+
 		if (pipe(fd) == -1)
 			ft_error();
 		proc_id = fork();
