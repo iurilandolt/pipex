@@ -6,13 +6,13 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 21:25:13 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 21:40:31 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:32:34 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void validate_path(char **paths, char **cmd)
+void	validate_path(char **paths, char **cmd)
 {
 	int		i;
 	char	*ptr;
@@ -20,7 +20,7 @@ void validate_path(char **paths, char **cmd)
 	i = 0;
 	while (*(paths + i))
 	{
-		if (ft_strnstr(*cmd,  *(paths + i), ft_strlen( *(paths + i))) != 0)
+		if (ft_strnstr(*cmd, *(paths + i), ft_strlen(*(paths + i))) != 0)
 		{
 			ptr = *cmd;
 			while (*ptr)
@@ -29,11 +29,11 @@ void validate_path(char **paths, char **cmd)
 					*cmd = ptr + 1;
 				ptr++;
 			}
-			return;
+			return ;
 		}
 		i++;
 	}
-	return;
+	return ;
 }
 
 char	*find_path(char **envp, char *cmd)

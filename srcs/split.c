@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:15:58 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/10 10:38:30 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:31:14 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	*substr_cpy(const char *src, size_t len)
 
 void	*clear(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (array[i])
