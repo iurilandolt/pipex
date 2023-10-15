@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 22:13:45 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 22:30:32 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 23:11:23 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void	child(char *argv, char **envp)
 	}
 	else
 	{
+		waitpid(proc_id, NULL, 0);
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
-		waitpid(proc_id, NULL, 0);
 	}
 }
 
@@ -101,8 +101,8 @@ void	call_doc(char **argv)
 	}
 	else
 	{
+		waitpid(proc_id, NULL, 0);
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
-		wait(NULL);
 	}
 }
