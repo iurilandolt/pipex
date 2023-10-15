@@ -26,9 +26,9 @@ SYSTEM_CALLS=(
 	"< infile.txt grep 'wisdom' | tr '[:lower:]' '[:upper:]' | sort > outfile.txt"
 	"< infile.txt du -h | grep 'M' | tr '[:lower:]' '[:upper:]' | head -n 1 > outfile.txt"
 	"< infile.txt grep 'town' | sed 's/town/village/g' | tr '[:upper:]' '[:lower:]' > outfile.txt"
-	"< infile.txt grep 'town' | sed 's/town/village/g' | unexistant > outfile.txt"
-	"< infile.txt grep 'town' | unexistant | tr '[:upper:]' '[:lower:]' > outfile.txt"
-	"< unexistant.txt grep 'town' | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' > outfile.txt"
+	#"< infile.txt grep 'town' | sed 's/town/village/g' | unexistant > outfile.txt"
+	#"< infile.txt grep 'town' | unexistant | tr '[:upper:]' '[:lower:]' > outfile.txt"
+	#"< unexistant.txt grep 'town' | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' > outfile.txt"
 )
 
 PIPEX_CALLS=(
@@ -53,9 +53,9 @@ PIPEX_CALLS=(
 	'./pipex infile.txt "grep wisdom" "tr '\''[:lower:]'\'' '\''[:upper:]'\''" "sort" outfile.txt'
 	'./pipex infile.txt "du -h" "grep M" "tr '\''[:lower:]'\'' '\''[:upper:]'\''" "head -n 1" outfile.txt'
 	'./pipex infile.txt "grep town" "sed '\''s/town/village/g'\''" "tr '\''[:upper:]'\'' '\''[:lower:]'\''" outfile.txt'
-	'./pipex infile.txt "grep town" "sed '\''s/town/village/g'\''" "unexistant" outfile.txt'
-	'./pipex infile.txt "grep town" "unexistant" "tr '\''[:upper:]'\'' '\''[:lower:]'\''" outfile.txt'
-	'./pipex unexistant.txt "grep town" "cut -d'\'' '\'' -f1" "tr '\''[:upper:]'\'' '\''[:lower:]'\''" outfile.txt'
+	#'./pipex infile.txt "grep town" "sed '\''s/town/village/g'\''" "unexistant" outfile.txt'
+	#'./pipex infile.txt "grep town" "unexistant" "tr '\''[:upper:]'\'' '\''[:lower:]'\''" outfile.txt'
+	#'./pipex unexistant.txt "grep town" "cut -d'\'' '\'' -f1" "tr '\''[:upper:]'\'' '\''[:lower:]'\''" outfile.txt'
 )
 
 for ((i = 0; i < ${#PIPEX_CALLS[@]}; i++)); do
@@ -65,7 +65,7 @@ for ((i = 0; i < ${#PIPEX_CALLS[@]}; i++)); do
     echo -e "${PIPEX_CALLS[i]}"
 
     # Display the original system pipe command
-    echo -e "${SYSTEM_CALLS[i]${RESET}}"
+    echo -e "${SYSTEM_CALLS[i]}${RESET}"
 
     # Execute the pipex command and display its output
     echo -e "${GREEN}PIPEX Output:${RESET}"
