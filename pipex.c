@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 11:45:27 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 16:24:38 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 17:42:49 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,6 @@ void	call_doc(char **argv)
 	{
 		while (get_line(&line) > 0)
 		{
-
 			if (ft_strnstr(line, argv[2], ft_strlen(line)) != 0)
 				exit(0);
 			write(fd[1], line, ft_strlen(line));	//mby use fd_putstr?
@@ -149,7 +148,7 @@ void	pipe_sequence(int argc, char **argv, char **envp)
 		fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fileout == -1)
 			ft_error();
-		call_doc(argv);
+		call_doc(argv); // i = call doc return int
 	}
 	else
 	{
@@ -159,6 +158,7 @@ void	pipe_sequence(int argc, char **argv, char **envp)
 		if (filein == -1 || fileout == -1)
 			ft_error();
 		dup2(filein, STDIN_FILENO);
+		// i = call parent return int
 	}
 	while (i < argc - 2)
 		child(argv[i++], envp);
