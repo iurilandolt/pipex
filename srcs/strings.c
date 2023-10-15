@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:11:48 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 16:24:46 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 21:34:26 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	get_line(char **line)
 {
 	int		i;
 	int		b_read;
-	char	*buffer;;
+	char	*buffer;
 
 	i = 0;
 	buffer = (char *)malloc(1024 * sizeof(char));

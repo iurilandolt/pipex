@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 13:38:04 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 16:24:19 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/15 21:41:38 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,16 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 size_t	ft_strlen(const char *s);
 int		get_line(char **line);
 
-////// ERRORS //////
+////// ERROR //////
 
 void	ft_putendl_fd(char *str, int fd);
 void	ft_error(void);
 void	path_error(char *str);
+
+////// PATH //////
+
+char	*find_path(char **envp, char *cmd);
+void validate_path(char **paths, char **cmd);
+
 
 #endif
