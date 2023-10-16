@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:11:48 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 22:30:53 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:22:21 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,25 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 		i++;
 	}
 	return (NULL);
+}
+
+int	get_line(char **line)
+{
+	int		i;
+	int		b_read;
+	char	*buffer;
+
+	i = 0;
+	buffer = (char *)malloc(1024 * sizeof(char));
+	b_read = read(0, buffer + i, 1);
+	while (b_read > 0)
+	{
+		if (buffer[i] == '\n' || buffer[i] == '\0')
+			break ;
+		i++;
+		b_read = read(0, buffer + i, 1);
+	}
+	buffer[i + 1] = '\0';
+	*line = buffer;
+	return (b_read);
 }

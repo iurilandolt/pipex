@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 22:13:45 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/16 14:29:53 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:31:46 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@ void	execute(char *argv, char **envp)
 	}
 }
 
+void	close_and_send(int *id, int *fd)
+{
+		waitpid(*id, NULL, 0);
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+}
+
 void	child(char *argv, char **envp)
 {
 	int		fd[2];
@@ -48,35 +55,7 @@ void	child(char *argv, char **envp)
 		execute(argv, envp);
 	}
 	else
-	{
-		waitpid(proc_id, NULL, 0);
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-	}
-}
-
-int	get_line(char **line)
-{
-	int		i;
-	int		b_read;
-	char	*buffer;
-
-	i = 0;
-	buffer = (char *)malloc(1024 * sizeof(char));
-	b_read = read(0, buffer + i, 1);
-	while (b_read > 0)
-	{
-		if (buffer[i] == '\n' || buffer[i] == '\0')
-			break ;
-		i++;
-		b_read = read(0, buffer + i, 1);
-	}
-	//if (b_read > 0)
-	//{
-	buffer[i + 1] = '\0';
-	*line = buffer;
-	//}
-	return (b_read);
+		close_and_send(&proc_id, fd);
 }
 
 void	call_doc(char **argv)
@@ -97,12 +76,9 @@ void	call_doc(char **argv)
 			ft_putstr_fd(line, fd[1]);
 			if (ft_strnstr(line, argv[2], ft_strlen(line)) != 0)
 				exit(0);
+			free(line);
 		}
 	}
 	else
-	{
-		waitpid(proc_id, NULL, 0);
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-	}
+		close_and_send(&proc_id, fd);
 }
