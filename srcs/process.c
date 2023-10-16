@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 22:13:45 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 23:11:23 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/16 14:29:53 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ int	get_line(char **line)
 		i++;
 		b_read = read(0, buffer + i, 1);
 	}
-	if (b_read > 0)
-	{
-		buffer[i + 1] = '\0';
-		*line = buffer;
-	}
+	//if (b_read > 0)
+	//{
+	buffer[i + 1] = '\0';
+	*line = buffer;
+	//}
 	return (b_read);
 }
 
@@ -94,9 +94,9 @@ void	call_doc(char **argv)
 	{
 		while (get_line(&line) > 0)
 		{
+			ft_putstr_fd(line, fd[1]);
 			if (ft_strnstr(line, argv[2], ft_strlen(line)) != 0)
 				exit(0);
-			ft_putstr_fd(line, fd[1]);
 		}
 	}
 	else
