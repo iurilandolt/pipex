@@ -66,22 +66,31 @@ We then loop through the subsequent commands using the child function, establish
 
 We use another int to identify the `process id`, the way `fork()` works is that it creates a paralel process to our initial process, a child to a parent. 
 
-In this instance we do not know wich one will finish first, so por managing purposes these proccesses are given identifiers, the parent process will have a `positive value`, and the child process will have the `value 0`.
-In this way we can decide what happens in each process. Note that this is necessary because all the code bellow the fork() call will run twice, one for each proccess.
+In this instance we do not know wich one will finish first, so for managing purposes these proccesses are given identifiers, the parent process will have a `positive value`, and the child process will have the `value 0`.
+
+In this way we can decide what happens in each process. 
+
+Note that this is necessary because all the code bellow the fork() call will run twice, one for each proccess.
 
 	pid_t	proc_id;
 	proc_id = fork();
 	if (proc_id == -1)
 		ft_error();
 
-If proc_id is 0, we're within the child process. We close the read end of the pipe and redirect the standard output to the write end.  
-if (proc_id == 0)
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		execute(argv, envp);
-	}
-In oposition if we're in the parent process we use waitpid to wait for a child with a matching id to stop, we close the write end of the pipe 'close(fd[1])' and redirect the nput of the parent process (STDIN_FILENO) to the read end (fd[0]) of the pipe.
+If proc_id is 0, we're within the child process. 
+
+We close the read end of the pipe and redirect the standard output to the write end.  
+
+	if (proc_id == 0)
+		{
+			close(fd[0]);
+			dup2(fd[1], STDOUT_FILENO);
+			execute(argv, envp);
+		}
+  
+In oposition if we're in the parent process we use waitpid to wait for a child with a matching id to stop. 
+
+We close the write end of the pipe `close(fd[1])` and redirect the input of the parent process `(STDIN_FILENO)` to the read end `(fd[0])` of the pipe.
 
 	else
 	{
@@ -90,7 +99,7 @@ In oposition if we're in the parent process we use waitpid to wait for a child w
 		dup2(fd[0], STDIN_FILENO);
 	}
 
-after the loop ends control returns to the main function, where we redirect the standard output (STDOUT_FILENO) of the parent process to fileout and execute the last argument. 
+After the loop ends control returns to the main function, where we redirect the standard output `(STDOUT_FILENO)` of the parent process to `fileout` and `execute` the last argument. `argv[argc - 2]`.
 
 	dup2(fileout, STDOUT_FILENO);
 	execute(argv[argc - 2], envp);
