@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 22:13:45 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/16 15:31:46 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/17 16:19:06 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	execute(char *argv, char **envp)
 
 void	close_and_send(int *id, int *fd)
 {
-		waitpid(*id, NULL, 0);
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
+	waitpid(*id, NULL, 0);
+	close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
 }
 
 void	child(char *argv, char **envp)
