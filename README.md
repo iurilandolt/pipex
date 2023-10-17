@@ -6,6 +6,10 @@ It accepts input from a file, from the output of a terminal command, or through 
 
 The input is then channeled through one or more commands, with each command processing the output of the previous one. The final result is directed into an output file.
 
+The allowed functions for this project are: 
+
+`open`; `close`; `read`; `write`; `malloc`; `wait`; `waitpid`; `free`; `pipe`; `fork`; `dup`; `dup2`; `execve`; `perror`; `strerror`; `exit`;
+
 We begin with opening the correct files and storing their given file descriptors. These will be the first and last argument of the ./pipex call.
 
 int	file_input(int argc, char **argv, int *filein, int *fileout)
