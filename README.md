@@ -70,23 +70,41 @@ after the loop ends control returns to the main function, where we redirect the 
 dup2(fileout, STDOUT_FILENO);
 execute(argv[argc - 2], envp);
 
-the execute() function. This is where we deal with 'execve' and the PATH environment variable for the first time.
+understanding the execute() function. This is where we deal with 'execve' and the PATH environment variable for the first time.
 In our main function, we are using a third argument char ** envp, envp is an array of strings containing envrimental variables. 
 
 #include <stdio.h>
 
-int main(int argc, char **argv, char **envp) {
-    (void)argc;
+int main(int argc, char **argv, char **envp) 
+{
+	(void)argc;
 	(void)argv;
-	for (int i = 0; envp[i] != NULL; i++) {
-        printf("%s\n", envp[i]);
-    }
-    return 0;
+	for (int i = 0; envp[i] != NULL; i++)
+		printf("%s\n", envp[i]);
+	return 0;
 }
 
 The one we are interested in is the PATH environment variable.
-It provides us with a list of directories where command-line utilities and other executable programs are located. The PATH variable contains a series of directory paths separated by colons (:). "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+It provides us with a list of directories where command-line utilities and other executable programs are located. The PATH variable contains a series of directory paths separated by colons (:). "PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
 To view the current directories included in the PATH variable in a terminal, you can use the command: 'echo $PATH'
 
+void	execute(char *argv, char **envp)
+{
+	char	**cmd;
+	char	*path;
+
+	cmd = ft_split(argv, ' ');
+	if (!cmd)
+		ft_error();
+	path = find_path(envp, *cmd);
+	if (!path)
+		path_error(argv);
+	if (execve(path, cmd, envp) == -1)
+	{
+		free(path);
+		clear(cmd);
+		ft_error();
+	}
+}
 
