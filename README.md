@@ -10,6 +10,16 @@ The allowed functions for this project are:
 
 `open`; `close`; `read`; `write`; `malloc`; `wait`; `waitpid`; `free`; `pipe`; `fork`; `dup`; `dup2`; `execve`; `perror`; `strerror`; `exit`;
 
+The program's arguments in comparison to the system's terminal arguments are:
+
+`$> ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2`
+
+`< file1 cmd1 | cmd2 | cmd3 ... | cmdn > file2`
+
+`$> ./pipex here_doc eof cmd1 cmd2 cmd3 ... cmdn file2`
+
+`<< eof cmd1 | cmd2 | cmd3 ... | cmdn > file2`
+
 We begin with opening the correct files and storing their given file descriptors. These will be the first and last argument of the ./pipex call.
 
 int	file_input(int argc, char **argv, int *filein, int *fileout)
