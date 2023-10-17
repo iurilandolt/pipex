@@ -1,6 +1,10 @@
 
 This program replicates the functionality of Unix terminal pipes (|). It accepts input from a file, from the output of a terminal command, or through the "here_doc" (<<) method. The input is then channeled through one or more commands, with each command processing the output of the previous one. The final result is directed into an output file.
 #metion path variable.
+#error managing, stderr, exit() function
+#check if anything is left open
+#allowed functions
+#program arguments vs system arguments
 
 We begin with opening the correct files and storing their given file descriptors. These will be the first and last argument of the ./pipex call.
 
@@ -41,16 +45,48 @@ we use another int to identify the proccess id, the way fork works is that it cr
 so por managing purposes these proccesses are given identifiers, the parent process will have a positive value, and the child process will have the value 0.
 in this way we can decide what happens in each process. Note that this is necessary because all the code bellow the fork() call will run twice, one for each proccess.
 
+pid_t	proc_id;
 proc_id = fork();
 if (proc_id == -1)
 	ft_error();
+
+If proc_id is 0, we're within the child process. We close the read end of the pipe and redirect the standard output to the write end.  
 if (proc_id == 0)
 {
 	close(fd[0]);
 	dup2(fd[1], STDOUT_FILENO);
 	execute(argv, envp);
 }
+In oposition if we're in the parent process we use waitpid to wait for a child with a matching id to stop, we close the write end of the pipe 'close(fd[1])' and redirect the nput of the parent process (STDIN_FILENO) to the read end (fd[0]) of the pipe.
 else
-	close_and_send(&proc_id, fd);
+{
+	waitpid(*id, NULL, 0);
+	close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
+}
+
+after the loop ends control returns to the main function, where we redirect the standard output (STDOUT_FILENO) of the parent process to fileout and execute the last argument. 
+
+dup2(fileout, STDOUT_FILENO);
+execute(argv[argc - 2], envp);
+
+the execute() function. This is where we deal with 'execve' and the PATH environment variable for the first time.
+In our main function, we are using a third argument char ** envp, envp is an array of strings containing envrimental variables. 
+
+#include <stdio.h>
+
+int main(int argc, char **argv, char **envp) {
+    (void)argc;
+	(void)argv;
+	for (int i = 0; envp[i] != NULL; i++) {
+        printf("%s\n", envp[i]);
+    }
+    return 0;
+}
+
+The one we are interested in is the PATH environment variable.
+It provides us with a list of directories where command-line utilities and other executable programs are located. The PATH variable contains a series of directory paths separated by colons (:). "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
+To view the current directories included in the PATH variable in a terminal, you can use the command: 'echo $PATH'
 
 
