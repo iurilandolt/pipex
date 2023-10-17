@@ -108,9 +108,9 @@ After the loop ends control returns to the main function, where we redirect the 
 
 Now, understanding the `execute()` function. 
 
-This is where we deal with 'execve' and the `PATH` `environment variable` for the first time.
+This is where we deal with `execve` and the `PATH` `environment variable` for the first time.
 
-In our main function, we are using a third argument `char ** envp`, envp is an array of strings containing `envrimental variables`. 
+In our main function, we are using a third argument `char ** envp`, envp is an array of strings containing `environment variables`. 
 
 	#include <stdio.h>
 	
@@ -123,7 +123,7 @@ In our main function, we are using a third argument `char ** envp`, envp is an a
 		return 0;
 	}
 
-The one we are interested in is the PATH environment variable.
+The one we are interested in is the `PATH` environment variable.
 
 It provides us with a list of directories where command-line utilities and other executable programs are located. 
 
@@ -131,7 +131,7 @@ The `PATH` variable contains a series of directory paths separated by colons `:`
 
 You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
 
-To view the current directories included in the PATH variable in a terminal, you can use the command: 'echo $PATH'
+To view the current directories included in the PATH variable in a terminal, you can use the command: `echo $PATH`
 
 	void	execute(char *argv, char **envp)
 	{
