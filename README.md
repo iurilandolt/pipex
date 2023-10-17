@@ -1,10 +1,10 @@
 
-This program replicates the functionality of Unix terminal pipes (|). It accepts input from a file, from the output of a terminal command, or through the "here_doc" (<<) method. The input is then channeled through one or more commands, with each command processing the output of the previous one. The final result is directed into an output file.
-#metion path variable.
-#error managing, stderr, exit() function
-#check if anything is left open
-#allowed functions
-#program arguments vs system arguments
+# pipex 
+This program replicates the functionality of Unix terminal pipes `|`). 
+
+It accepts input from a file, from the output of a terminal command, or through the "here_doc" (<<) method. 
+
+The input is then channeled through one or more commands, with each command processing the output of the previous one. The final result is directed into an output file.
 
 We begin with opening the correct files and storing their given file descriptors. These will be the first and last argument of the ./pipex call.
 
@@ -107,4 +107,14 @@ void	execute(char *argv, char **envp)
 		ft_error();
 	}
 }
+
+#metion path variable.
+
+#error managing, stderr, exit() function
+
+#check if anything is left open
+
+#allowed functions
+
+#program arguments vs system arguments
 
