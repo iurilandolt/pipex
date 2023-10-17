@@ -57,6 +57,7 @@ We then loop through the subsequent commands using the child function, establish
 			execute(argv[argc - 2], envp);
 
   Within the child function is where things get more messy, we need to understand what a pipe is and how it works, and also how the code readability is affected after using functions like `fork()` and `execve()`.
+  
   Similiar to what we did before with `filein` and `fileout` we will use  `pipe()` on an array of two ints and use them as file descriptors, one for reading, one for writting.
 	
 	int		fd[2];
