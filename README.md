@@ -4,7 +4,9 @@ This program replicates the functionality of Unix terminal pipes `|`.
 
 It accepts input from a `file`, from the output of a `terminal command`, or through the `"here_doc"` `<<` method. 
 
-The input is then channeled through one or more commands, with each command processing the output of the previous one. The final result is directed into an output file.
+The input is then channeled through one or more commands, with each command processing the output of the previous one. 
+
+The final result is directed into an output file.
 
 The allowed functions for this project are: 
 
@@ -77,9 +79,9 @@ Note that this is necessary because all the code bellow the fork() call will run
 	if (proc_id == -1)
 		ft_error();
 
-If proc_id is 0, we're within the child process. 
+If `proc_id is 0`, we're within the child process. 
 
-We close the read end of the pipe and redirect the standard output to the write end.  
+We close the read end of the pipe `fd[0]` and redirect the standard output `STDOUT_FILENO` to the write end.  
 
 	if (proc_id == 0)
 	{
@@ -88,7 +90,7 @@ We close the read end of the pipe and redirect the standard output to the write 
 		execute(argv, envp);
 	}
   
-In oposition if we're in the parent process we use waitpid to wait for a child with a matching id to stop. 
+In oposition if we're in the parent process we use `waitpid` to wait for a child with a matching id to stop. 
 
 We close the write end of the pipe `close(fd[1])` and redirect the input of the parent process `(STDIN_FILENO)` to the read end `(fd[0])` of the pipe.
 
@@ -104,8 +106,11 @@ After the loop ends control returns to the main function, where we redirect the 
 	dup2(fileout, STDOUT_FILENO);
 	execute(argv[argc - 2], envp);
 
-understanding the execute() function. This is where we deal with 'execve' and the PATH environment variable for the first time.
-In our main function, we are using a third argument char ** envp, envp is an array of strings containing envrimental variables. 
+Now, understanding the `execute()` function. 
+
+This is where we deal with 'execve' and the `PATH` `environment variable` for the first time.
+
+In our main function, we are using a third argument `char ** envp`, envp is an array of strings containing `envrimental variables`. 
 
 	#include <stdio.h>
 	
@@ -119,28 +124,33 @@ In our main function, we are using a third argument char ** envp, envp is an arr
 	}
 
 The one we are interested in is the PATH environment variable.
-It provides us with a list of directories where command-line utilities and other executable programs are located. The PATH variable contains a series of directory paths separated by colons (:). "PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+
+It provides us with a list of directories where command-line utilities and other executable programs are located. 
+
+The `PATH` variable contains a series of directory paths separated by colons `:`. `"PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"`
+
 You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
+
 To view the current directories included in the PATH variable in a terminal, you can use the command: 'echo $PATH'
 
-void	execute(char *argv, char **envp)
-{
-	char	**cmd;
-	char	*path;
-
-	cmd = ft_split(argv, ' ');
-	if (!cmd)
-		ft_error();
-	path = find_path(envp, *cmd);
-	if (!path)
-		path_error(argv);
-	if (execve(path, cmd, envp) == -1)
+	void	execute(char *argv, char **envp)
 	{
-		free(path);
-		clear(cmd);
-		ft_error();
+		char	**cmd;
+		char	*path;
+	
+		cmd = ft_split(argv, ' ');
+		if (!cmd)
+			ft_error();
+		path = find_path(envp, *cmd);
+		if (!path)
+			path_error(argv);
+		if (execve(path, cmd, envp) == -1)
+		{
+			free(path);
+			clear(cmd);
+			ft_error();
+		}
 	}
-}
 
 #metion path variable.
 
