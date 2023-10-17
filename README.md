@@ -1,8 +1,8 @@
 
 # pipex 
-This program replicates the functionality of Unix terminal pipes `|`). 
+This program replicates the functionality of Unix terminal pipes `|`. 
 
-It accepts input from a file, from the output of a terminal command, or through the "here_doc" (<<) method. 
+It accepts input from a `file`, from the output of a `terminal command`, or through the `"here_doc"` `<<` method. 
 
 The input is then channeled through one or more commands, with each command processing the output of the previous one. The final result is directed into an output file.
 
