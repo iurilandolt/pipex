@@ -82,11 +82,11 @@ If proc_id is 0, we're within the child process.
 We close the read end of the pipe and redirect the standard output to the write end.  
 
 	if (proc_id == 0)
-		{
-			close(fd[0]);
-			dup2(fd[1], STDOUT_FILENO);
-			execute(argv, envp);
-		}
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		execute(argv, envp);
+	}
   
 In oposition if we're in the parent process we use waitpid to wait for a child with a matching id to stop. 
 
