@@ -53,7 +53,7 @@ Before moving on we also set up our final destination, the output file, with;
 These flags `O_WRONLY | O_CREAT | O_TRUNC` specify the type of access we want to have to the file, in this case we want to write to the file, create it if it doesn't exist and overwrite it's content if it already exists.
 The `0644` sets the file permisions for `O_CREAT` when creating a new file.
 
-## Executing our first command, subsequent commands and final command. In a nutshell, it would look something like this:
+## Starting and executing first child process
 		
 	  int main(int argc, char **argv, char **envp) {
    		file_input(argc, argv, &filein, &fileout);
