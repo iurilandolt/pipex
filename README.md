@@ -224,6 +224,7 @@ Alternatively we can use the input from the from the unix `<<` `here_doc` functi
 			free(line);
 		}
 	}
+ 
  And in the parent process, like bofore, we wait for the child process to end with `waitpid(*id, NULL, 0);`, close the write end of the pipe with `close(fd[1])`, and set `STDIN_FILENO` to receive input from `fd[0]`. 
  
  	else
@@ -234,6 +235,7 @@ Alternatively we can use the input from the from the unix `<<` `here_doc` functi
 	}
 
 ## Signal Flow
+
 ```
 stdin   
    │
