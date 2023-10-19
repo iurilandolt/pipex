@@ -193,8 +193,8 @@ If `execve()` is successful, no code after it will be considered. We use the if 
 `path_error()`: Prints an error message to the standard error (file descriptor 2), indicating that the given command str was not found, then exits with a status of 127. 
 
 The exit code 127 is commonly used in shells to indicate that a command was not found.
-- EXIT_SUCCESS is typically defined as 0, indicating success.
-- EXIT_FAILURE is an implementation-defined non-zero value, which indicates failure. In most implementations, it's defined as 1.
+- `EXIT_SUCCESS` is typically defined as 0, indicating success.
+- `EXIT_FAILURE` is an implementation-defined non-zero value, which indicates failure. In most implementations, it's defined as 1.
 
 ## Signal Flow
 ```
