@@ -106,7 +106,7 @@ Execute `argv[i]`;
 		execute(argv, envp);
 	}
   
-In oposition if we're in the parent process we use `waitpid` to wait for a child with a matching id to stop.
+In oposition if we're in the parent process we use `waitpid()` to wait for a child with a matching id to stop.
 
 <sub>This is where we will pipe the output for subsequent `child()` iterations.</sub>
 
@@ -120,12 +120,14 @@ and set `STDIN_FILENO` to recieve input from `fd[0`;
 		dup2(fd[0], STDIN_FILENO);
 	}
 
-After the loop ends control returns to the main function, where we redirect the standard output `(STDOUT_FILENO)` of the parent process to `fileout` and `execute` the last argument. `argv[argc - 2]`.
+After the last child() iteration ends, control returns to the main function, where;
+
+We redirect the output and execute our last command `argv[argc - 2]`.
 
 	dup2(fileout, STDOUT_FILENO);
 	execute(argv[argc - 2], envp);
 
-Now, understanding the `execute()` function. 
+# `execve()` and `PATH` 
 
 This is where we deal with `execve` and the `PATH` `environment variable` for the first time.
 
