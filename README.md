@@ -68,7 +68,7 @@ After setting up our source and destination we can start running the child comma
   
 Within the child function is where we will encounter `**envp`, `pipe()`, `fork()` and `execve()` for the first time. familiarity with these concepts is key to understanding this project. I've tried to approach them in the most simplistic way possible  being that they are new concepts for me.
   
-Similiar to what we did before with `filein` and `fileout` we will use `pipe()` on an array of two ints and use them as file descriptors, one for reading, one for writting.
+Similiar to what we did before with `filein` and `fileout` we will use `pipe()` on an array of two ints and use them as file descriptors, one for reading `fd[0]` , one for writting `fd[1]`.
 	
 	int	fd[2];
 	if (pipe(fd) == -1)
