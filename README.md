@@ -155,7 +155,7 @@ After the last child() iteration ends, control returns to the main function. Her
 
 ## Execute(), `execve()` and `PATH` 
 
-This is where we deal with `execve` and the `PATH` `environment variable` for the first time.
+This is where we deal with `execve()` and the `$PATH` `environment variable` for the first time.
 
 In our main function, we are using a third argument `char ** envp`, envp is an array of strings containing `environment variables`. 
 
@@ -170,7 +170,7 @@ In our main function, we are using a third argument `char ** envp`, envp is an a
 		return 0;
 	}
 
-The one we are interested in is the `PATH` environment variable.
+the code above will give you a list of all the enviromental variables in your system. the one we are interested in is the `PATH` environment variable.
 
 It provides us with a list of directories where command-line utilities and other executable programs are located. 
 
@@ -178,9 +178,16 @@ The `PATH` variable contains a series of directory paths separated by colons `:`
 
 You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
 
-To view the current directories included in the PATH variable in a terminal, you can use the command: `echo $PATH`
+To view the current directories included in the PATH variable in a terminal, you can use the command: `echo $PATH`.
+We need these directores in order to run `execve()`, The execve() function replaces the current process with a new one. If successful, it does not return;  If there is an error, returns -1. This function takes three arguments; 
 
-	void	execute(char *argv, char **envp)
+A string representing the path to the executable,
+
+a NULL-terminated array of string pointers representing the command and it's arguments <sub>if the command is "ls -a" we use `split()`</sub>
+
+and a pointer to the environment variables `**envp`.
+ 
+ 	void	execute(char *argv, char **envp)
 	{
 		char	**cmd;
 		char	*path;
@@ -198,6 +205,8 @@ To view the current directories included in the PATH variable in a terminal, you
 			ft_error();
 		}
 	}
+
+ # Managing errors, debbuging and cleaning up.
 
 #metion path variable.
 
