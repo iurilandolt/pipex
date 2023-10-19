@@ -110,7 +110,9 @@ In opposition, if we're in the parent process, we use `waitpid()` to wait for a 
 
 <sub>This is where we will pipe the output for subsequent `child()` iterations.</sub>
 
-In the parent process, we wait for the child process to end with `waitpid(*id, NULL, 0);`, close the write end of the pipe with `close(fd[1])`, and set `STDIN_FILENO` to receive input from `fd[0]`. As a result, the next time we call the `execute()` function, whether in the next iteration of `child()` or in the `main()`, the executed command will receive input from the reading end of the previously set pipe `fd[0]`.
+In the parent process, we wait for the child process to end with `waitpid(*id, NULL, 0);`, close the write end of the pipe with `close(fd[1])`, and set `STDIN_FILENO` to receive input from `fd[0]`. 
+
+As a result, the next time we call the `execute()` function, whether in the next iteration of `child()` or in the `main()`, the executed command will receive input from the reading end of the previously set pipe `fd[0]`.
 
 	else
 	{
