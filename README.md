@@ -127,7 +127,7 @@ We redirect the output and execute our last command `argv[argc - 2]`.
 	dup2(fileout, STDOUT_FILENO);
 	execute(argv[argc - 2], envp);
 
-# `execve()` and `PATH` 
+## Execute(), `execve()` and `PATH` 
 
 This is where we deal with `execve` and the `PATH` `environment variable` for the first time.
 
