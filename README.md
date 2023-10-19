@@ -151,8 +151,6 @@ fileout (redirected by main)
 		    |
 		    v (via dup2(fileout, STDOUT_FILENO); in main)</sub>
 
-
-
 ## Execute(), `execve()` and `PATH` 
 
 This is where we deal with `execve()` and the `$PATH` `environment variable` for the first time.
@@ -170,23 +168,23 @@ In our main function, we are using a third argument `char ** envp`, envp is an a
 		return 0;
 	}
 
-the code above will give you a list of all the enviromental variables in your system. the one we are interested in is the `$PATH` environment variable.
+The code above will give you a list of all the environmental variables in your system. The one we are interested in is the `$PATH` environment variable.
 
 It provides us with a list of directories where command-line utilities and other executable programs are located. 
 
-The `PATH` variable contains a series of directory paths separated by colons `:`. `"PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"`
+The `PATH` variable contains a series of directory paths separated by colons `:`. For example, `"PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"`.
 
-You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
+You can add directories to your PATH if you have custom scripts or binaries located elsewhere. Alternatively, you can modify it in a user's profile settings (like `~/.bashrc`, `~/.bash_profile`, or `~/.profile` for the bash shell, for instance) to make the change persistent across sessions.
 
 To view the current directories included in the PATH variable in a terminal, you can use the command: `echo $PATH`.
 
-We need these directores in order to run `execve()`, the execve() function replaces the current process with a new one. 
+We need these directories in order to run `execve()`. The `execve()` function replaces the current process with a new one. 
 
-If successful, it does not return;  If there is an error, returns -1. This function takes three arguments; 
+If successful, it does not return. If there is an error, it returns -1. This function takes three arguments: 
 
-- A string representing the path to the executable,
-- A NULL-terminated array of string pointers representing the command and it's arguments <sub>(if the command is "ls -a" we use `split()`)</sub>
-- A pointer to the environment variables `**envp`.
+- A string representing the path to the executable.
+- A NULL-terminated array of string pointers representing the command and its arguments. For instance, for the command "ls -a", we might use a function like `split()`.
+- A pointer to the environment variables, `**envp`.
  
 		void	execute(char *argv, char **envp)
 		{
@@ -206,8 +204,12 @@ If successful, it does not return;  If there is an error, returns -1. This funct
 				ft_error();
 			}
 		}
+  
+If `execve()` is successful, no code after it will be considered. We use the if clause `if (execve(path, cmd, envp) == -1)` to free both `*path` and `**cmd` and to print an error to `stderr`.
 
- # Managing errors, debbuging and cleaning up.
+
+
+ # Managing errors, error codes and cleaning up.
 
 #metion path variable.
 
