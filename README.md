@@ -22,7 +22,7 @@ The program's arguments in comparison to the system's terminal arguments are:
 
 `<< eof cmd1 | cmd2 | cmd3 ... | cmdn > file2`
 
-We begin with opening the correct files and storing their given file descriptors. 
+## opening the correct files and storing their given file descriptors. 
 
 These will be the first and last argument of the ./pipex call.
 
