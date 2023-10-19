@@ -22,7 +22,11 @@ The program's arguments in comparison to the system's terminal arguments are:
 
 `<< eof cmd1 | cmd2 | cmd3 ... | cmdn > file2`
 
-We begin with opening the correct files and storing their given file descriptors. These will be the first and last argument of the ./pipex call.
+Let's get into it.
+
+We begin with opening the correct files and storing their given file descriptors. 
+
+These will be the first and last argument of the ./pipex call.
 
 	int	file_input(int argc, char **argv, int *filein, int *fileout)
 	{
@@ -34,21 +38,16 @@ We begin with opening the correct files and storing their given file descriptors
 		return (2);
 	}
 
-The function file_input serves as a foundational step to set up the data flow for our first child process. 
+The function `file_input()` serves as a starting step to set up the data flow for our first child process. 
 
-This initial child process will read input, process it, and pass it through a series of other child processes. 
+`*filein = open(argv[1], O_RDONLY, 0644);`  We use `open()` to store the file descriptor of the input file given by the user; `argv[1]`.
 
-The data then finally reaches our parent process; `argv[argc -2]` ending in `fileout`.
-
-To make this possible we use the `dup2()` function. 
-
-Initially, with:
+Having access to the input file we can now redirect the standard input `(STDIN_FILENO)` to read from `filein`, with:
 
 	dup2(*filein, STDIN_FILENO);
 
-we redirect the standard input `(STDIN_FILENO)` to read from `filein`. 
-
-With this redirection when we invoke the command from `argv[2]`, it will recieve input directly from `filein`.
+With this redirection we are ready execute our first command `argv[2]`, if this requires input, it will be read directly from `filein`.
+Before moving on we also set up our final destination, the output file; `*fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);`
 
 We then loop through the subsequent commands using the child function, establishing a pipeline of processes to handle our data.
 		
