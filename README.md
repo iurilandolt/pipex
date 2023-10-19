@@ -151,7 +151,7 @@ fileout (redirected by main)
 		    |
 		    v (via dup2(fileout, STDOUT_FILENO); in main)</sub>
 
-## Execute(), `execve()` and `PATH` 
+## Execute(), execve() and PATH 
 
 This is where we deal with `execve()` and the `$PATH` `environment variable` for the first time.
 
@@ -205,7 +205,7 @@ If successful, it does not return. If there is an error, it returns -1. This fun
 			}
 		}
   
-If `execve()` is successful, no code after it will be considered. We use the if clause `if (execve(path, cmd, envp) == -1)` to free both `*path` and `**cmd` and to print an error to `stderr`.
+If `execve()` is successful, no code after it will be considered. We use the if clause `if (execve(path, cmd, envp) == -1)` to free both `*path` and `**cmd` and to print an error to `stderr` in case it fails.
 
 
 
