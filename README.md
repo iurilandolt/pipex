@@ -22,8 +22,6 @@ The program's arguments in comparison to the system's terminal arguments are:
 
 `<< eof cmd1 | cmd2 | cmd3 ... | cmdn > file2`
 
-Let's get into it.
-
 We begin with opening the correct files and storing their given file descriptors. 
 
 These will be the first and last argument of the ./pipex call.
@@ -46,13 +44,13 @@ Having access to the input file we can now redirect the standard input `(STDIN_F
 
 	dup2(*filein, STDIN_FILENO);
 
-With this redirection we are ready execute our first command `argv[2]`, if this requires input, it will be read directly from `filein`.
+With this redirection we are ready to execute our first command `argv[2]`, if this requires input, it will be read directly from `filein`.
 
 Before moving on we also set up our final destination, the output file, with; 
 
 `*fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);`
 
-These flags `O_WRONLY | O_CREAT | O_TRUNC` specify the type of access we want to have to the file, in this case we want to write to the file, create it if it doesn't exist and overwrite it's contents if it already exists.
+These flags `O_WRONLY | O_CREAT | O_TRUNC` specify the type of access we want to have to the file, in this case we want to write to the file, create it if it doesn't exist and overwrite it's content if it already exists.
 The `0644` sets the file permisions for `O_CREAT` when creating a new file.
 
 Moving on to executing our first command, subsequent commands and final command. In a nutshell, it would look something like this:
