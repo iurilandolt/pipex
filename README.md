@@ -170,7 +170,7 @@ In our main function, we are using a third argument `char ** envp`, envp is an a
 		return 0;
 	}
 
-the code above will give you a list of all the enviromental variables in your system. the one we are interested in is the `PATH` environment variable.
+the code above will give you a list of all the enviromental variables in your system. the one we are interested in is the `$PATH` environment variable.
 
 It provides us with a list of directories where command-line utilities and other executable programs are located. 
 
