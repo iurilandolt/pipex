@@ -108,7 +108,7 @@ Execute `argv[i]`;
   
 In oposition if we're in the parent process we use `waitpid` to wait for a child with a matching id to stop.
 
-<sub> This is where we will pipe the output for subsequent `child()` iterations and eventualy to last command and `outfile`. </sub>
+<sub>This is where we will pipe the output for subsequent `child()` iterations and eventualy to last command and `outfile`.</sub>
 
 In the parent process we wait for the child process to end `waitpid(*id, NULL, 0);`, close the write end of the pipe `close(fd[1])`
 and set `STDIN_FILENO` to recieve input from `fd[0`;
