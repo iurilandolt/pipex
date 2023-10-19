@@ -47,19 +47,28 @@ Having access to the input file we can now redirect the standard input `(STDIN_F
 	dup2(*filein, STDIN_FILENO);
 
 With this redirection we are ready execute our first command `argv[2]`, if this requires input, it will be read directly from `filein`.
-Before moving on we also set up our final destination, the output file; `*fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);`
 
-We then loop through the subsequent commands using the child function, establishing a pipeline of processes to handle our data.
+Before moving on we also set up our final destination, the output file, with; 
+
+`*fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);`
+
+These flags `O_WRONLY | O_CREAT | O_TRUNC` specify the type of access we want to have to the file, in this case we want to write to the file, create it if it doesn't exist and overwrite it's contents if it already exists.
+The `0644` sets the file permisions for `O_CREAT` when creating a new file.
+
+Moving on to executing our first command, subsequent commands and final command. In a nutshell, it would look something like this:
 		
-	  file_input(argc, argv, &filein, &fileout);
+	  int main(int argc, char **argv, char **envp) {
+   		file_input(argc, argv, &filein, &fileout);
 			while (i < argc - 2)
 				child(argv[i++], envp);
 			dup2(fileout, STDOUT_FILENO);
-			execute(argv[argc - 2], envp);
+			execute(argv[argc - 2], envp); }
 
-  Within the child function is where things get more messy, we need to understand what a pipe is and how it works, and also how the code readability is affected after using functions like `fork()` and `execve()`.
+After setting up our source and destination we can start running the child commands; `while (i < argc - 2)` -> `child(argv[i++], envp);`
   
-  Similiar to what we did before with `filein` and `fileout` we will use  `pipe()` on an array of two ints and use them as file descriptors, one for reading, one for writting.
+Within the child function is where things get more messy, we need to understand what a pipe is and how it works, and also how the code readability is affected after using functions like `fork()` and `execve()`.
+  
+Similiar to what we did before with `filein` and `fileout` we will use  `pipe()` on an array of two ints and use them as file descriptors, one for reading, one for writting.
 	
 	int		fd[2];
 	if (pipe(fd) == -1)
