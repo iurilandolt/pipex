@@ -40,7 +40,7 @@ The function `file_input()` serves as a starting step to set up the data flow fo
 
 `*filein = open(argv[1], O_RDONLY, 0644);`  We use `open()` to store the file descriptor of the input file given by the user; `argv[1]`.
 
-### Redirecting the standard input `(STDIN_FILENO)` to read from `filein`, with:
+### Redirecting the standard input # `(STDIN_FILENO)` to read from `filein`, with:
 
 	dup2(*filein, STDIN_FILENO);
 
