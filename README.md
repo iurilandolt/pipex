@@ -179,7 +179,10 @@ The `PATH` variable contains a series of directory paths separated by colons `:`
 You can add directories to your PATH if you have custom scripts or binaries located elsewhere or modify it in a user's profile settings (~/.bashrc, ~/.bash_profile, or ~/.profile for the bash shell, for instance) to make the change persistent across sessions.
 
 To view the current directories included in the PATH variable in a terminal, you can use the command: `echo $PATH`.
-We need these directores in order to run `execve()`, The execve() function replaces the current process with a new one. If successful, it does not return;  If there is an error, returns -1. This function takes three arguments; 
+
+We need these directores in order to run `execve()`, he execve() function replaces the current process with a new one. 
+
+If successful, it does not return;  If there is an error, returns -1. This function takes three arguments; 
 
 A string representing the path to the executable,
 
