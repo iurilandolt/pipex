@@ -43,11 +43,18 @@ The function `file_input()` serves as a starting step to set up the data flow fo
 
 ### Redirecting the standard input
 
-`(STDIN_FILENO)` to read from `filein` with:
+We redirect `(STDIN_FILENO)` to read from `filein` with:
 
 	dup2(*filein, STDIN_FILENO);
 
 With this redirection, we are ready to execute our first command `argv[2]`. If this command requires input, it will be read directly from `filein`.
+
+The `dup2()` function duplicates one file descriptor, making it an alias to another.
+
+If successful, it returns the new file descriptor. If there is an error, it returns -1. The function has two main arguments:
+
+- oldfd: The original file descriptor you want to duplicate.
+- newfd: The file descriptor number you want the duplicate to adopt. If newfd is already open, it gets closed before being reused.
 
 Before moving on, we also set up our final destination, the output file, with: 
 
