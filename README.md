@@ -128,7 +128,7 @@ After the last child() iteration ends, control returns to the main function. Her
 
  Here's a quick look at what the signal flow looks like in a txt based grap ^^
 
-	 stdin     -->     filein (opened by main function)
+	stdin     -->     filein (opened by main function)
 	                    |
 	                    v (via dup2(*filein, STDIN_FILENO);)
 	stdout    -->     fd[1] (write end of first pipe, set in child())
