@@ -128,28 +128,28 @@ After the last child() iteration ends, control returns to the main function. Her
 
  Here's a quick look at what the signal flow looks like in a txt based grap ^^
 
-	stdin     -->     filein (opened by main function)
-	                    |
-	                    v (via dup2(*filein, STDIN_FILENO);)
-	stdout    -->     fd[1] (write end of first pipe, set in child())
-	                    |
-	                    v (via dup2(fd[1], STDOUT_FILENO); in child())
-	fd[0] (read end of first pipe)
-	                    |
-	                    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
-	stdout (of first child)    -->     fd[1] (write end of second pipe)
-	                    |
-	                    v (via dup2(fd[1], STDOUT_FILENO); in next child())
-	fd[0] (read end of second pipe)
-	                    |
-	                    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
-	...     ...     ...
-	stdout (of nth child)      -->     fd[1] (write end of nth pipe)
-	                    |
-	                    v (via dup2(fd[1], STDOUT_FILENO); in nth child())
-	fileout (redirected by main)
-	                    |
-	                    v (via dup2(fileout, STDOUT_FILENO); in main)
+<sub>stdin     -->     filein (opened by main function)
+		    |
+		    v (via dup2(*filein, STDIN_FILENO);)
+stdout    -->     fd[1] (write end of first pipe, set in child())
+		    |
+		    v (via dup2(fd[1], STDOUT_FILENO); in child())
+fd[0] (read end of first pipe)
+		    |
+		    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
+stdout (of first child)    -->     fd[1] (write end of second pipe)
+		    |
+		    v (via dup2(fd[1], STDOUT_FILENO); in next child())
+fd[0] (read end of second pipe)
+		    |
+		    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
+...     ...     ...
+stdout (of nth child)      -->     fd[1] (write end of nth pipe)
+		    |
+		    v (via dup2(fd[1], STDOUT_FILENO); in nth child())
+fileout (redirected by main)
+		    |
+		    v (via dup2(fileout, STDOUT_FILENO); in main)</sub>
 
 
 
@@ -180,15 +180,13 @@ You can add directories to your PATH if you have custom scripts or binaries loca
 
 To view the current directories included in the PATH variable in a terminal, you can use the command: `echo $PATH`.
 
-We need these directores in order to run `execve()`, he execve() function replaces the current process with a new one. 
+We need these directores in order to run `execve()`, the execve() function replaces the current process with a new one. 
 
 If successful, it does not return;  If there is an error, returns -1. This function takes three arguments; 
 
-A string representing the path to the executable,
-
-a NULL-terminated array of string pointers representing the command and it's arguments <sub>if the command is "ls -a" we use `split()`</sub>
-
-and a pointer to the environment variables `**envp`.
+- A string representing the path to the executable,
+- A NULL-terminated array of string pointers representing the command and it's arguments <sub>if the command is "ls -a" we use `split()`</sub>
+- A pointer to the environment variables `**envp`.
  
  	void	execute(char *argv, char **envp)
 	{
