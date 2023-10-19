@@ -66,7 +66,7 @@ The `0644` sets the file permisions for `O_CREAT` when creating a new file.
 
 After setting up our source and destination we can start running the child commands; `while (i < argc - 2)` -> `child(argv[i++], envp);`
   
-Within the child function is where we will encounter `**envp`, `pipe()`, `fork()` and `execve()` for the first time. familiarity with these concepts is key to understanding this project. I've tried to approach them in the most simplistic way possible  being that they are new concepts for me.
+Within the child function is where we will encounter `**envp`, `pipe()`, `fork()`, `waitpid()` and `execve()` for the first time. familiarity with these concepts is key to understanding this project. I've tried to approach them in the most simplistic way possible  being that they are new concepts for me.
   
 Similiar to what we did before with `filein` and `fileout` we will use `pipe()` on an array of two ints and use them as file descriptors, one for reading `fd[0]` , one for writting `fd[1]`.
 	
@@ -97,7 +97,7 @@ Redirect the standard output `STDOUT_FILENO` to the write end `fd[1]`. `dup2(fd[
 
 Execute `argv[i]`; 
 
-<sub>In the first iteration the child process will read its input from `filein`, in subsequent iterations The child processes will read their input from the output of the previous command. </sub>
+<sub>(In the first iteration the child process will read it's input from `filein`, in subsequent iterations the child processes will read their input from the output of the previous command.) </sub>
 
 	if (proc_id == 0)
 	{
@@ -106,10 +106,12 @@ Execute `argv[i]`;
 		execute(argv, envp);
 	}
   
-In oposition if we're in the parent process we use `waitpid` to wait for a child with a matching id to stop. 
-This is where we will pipe the output for subsequent `child()` iterations and eventualy to last command and `outfile`.
+In oposition if we're in the parent process we use `waitpid` to wait for a child with a matching id to stop.
 
-We close the write end of the pipe `close(fd[1])` and redirect the input of the parent process `(STDIN_FILENO)` to the read end `(fd[0])` of the pipe.
+<sub> This is where we will pipe the output for subsequent `child()` iterations and eventualy to last command and `outfile`. </sub>
+
+In the parent process we wait for the child process to end `waitpid(*id, NULL, 0);`, close the write end of the pipe `close(fd[1])`
+and set `STDIN_FILENO` to recieve input from `fd[0`;
 
 	else
 	{
