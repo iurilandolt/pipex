@@ -89,9 +89,15 @@ Note that this is necessary because all the code bellow the fork() call will run
 
 If `proc_id is 0`, we're within the child process. 
 
-We close the read end of the pipe `close(fd[0]);`;  <sub>(In this instance we don't need to read from the pipe because our input is already setup to be read from `filein` -> `dup2(*filein, STDIN_FILENO);`)</sub>
+We close the read end of the pipe `close(fd[0]);`;  
 
-And Redirect the standard output `STDOUT_FILENO` to the write end `fd[1]`. `dup2(fd[1], STDOUT_FILENO);` 
+<sub>(In this instance we don't need to read from the pipe because our input is already setup to be read from `filein` -> `dup2(*filein, STDIN_FILENO);`)</sub>
+
+Redirect the standard output `STDOUT_FILENO` to the write end `fd[1]`. `dup2(fd[1], STDOUT_FILENO);`
+
+Execute `argv[i]`; 
+
+<sub>In the first iteration the child process will read its input from `filein`, in subsequent iterations The child processes will read their input from the output of the previous command. </sub>
 
 	if (proc_id == 0)
 	{
@@ -101,6 +107,7 @@ And Redirect the standard output `STDOUT_FILENO` to the write end `fd[1]`. `dup2
 	}
   
 In oposition if we're in the parent process we use `waitpid` to wait for a child with a matching id to stop. 
+This is where we will pipe the output for subsequent `child()` iterations and eventualy to last command and `outfile`.
 
 We close the write end of the pipe `close(fd[1])` and redirect the input of the parent process `(STDIN_FILENO)` to the read end `(fd[0])` of the pipe.
 
