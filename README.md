@@ -197,7 +197,7 @@ The exit code 127 is commonly used in shells to indicate that a command was not 
 - EXIT_FAILURE is an implementation-defined non-zero value, which indicates failure. In most implementations, it's defined as 1.
 
 ## Signal Flow
-
+```
 stdin   
    │
    ▼
@@ -228,7 +228,7 @@ stdout (of nth child) ────────┘
 fileout (redirected by main)
    │
    ▼
-stdout (via dup2(fileout, STDOUT_FILENO); in main)
+stdout (via dup2(fileout, STDOUT_FILENO); in main) ```
 
 
 
