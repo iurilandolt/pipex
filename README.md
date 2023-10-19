@@ -106,7 +106,7 @@ Execute `argv[i]`;
 		execute(argv, envp);
 	}
   
-In contrast, if we're in the parent process, we use `waitpid()` to wait for a child with a matching ID to stop.
+In opposition, if we're in the parent process, we use `waitpid()` to wait for a child with a matching ID to stop.
 
 <sub>This is where we will pipe the output for subsequent `child()` iterations.</sub>
 
