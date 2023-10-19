@@ -126,31 +126,6 @@ After the last child() iteration ends, control returns to the main function. Her
 	dup2(fileout, STDOUT_FILENO);
 	execute(argv[argc - 2], envp);
 
- Here's a quick look at what the signal flow looks like in a txt based grap ^^
-
-<sub>stdin     -->     filein (opened by main function)
-		    |
-		    v (via dup2(*filein, STDIN_FILENO);)
-stdout    -->     fd[1] (write end of first pipe, set in child())
-		    |
-		    v (via dup2(fd[1], STDOUT_FILENO); in child())
-fd[0] (read end of first pipe)
-		    |
-		    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
-stdout (of first child)    -->     fd[1] (write end of second pipe)
-		    |
-		    v (via dup2(fd[1], STDOUT_FILENO); in next child())
-fd[0] (read end of second pipe)
-		    |
-		    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
-...     ...     ...
-stdout (of nth child)      -->     fd[1] (write end of nth pipe)
-		    |
-		    v (via dup2(fd[1], STDOUT_FILENO); in nth child())
-fileout (redirected by main)
-		    |
-		    v (via dup2(fileout, STDOUT_FILENO); in main)</sub>
-
 ## Execute(), execve() and PATH 
 
 This is where we deal with `execve()` and the `$PATH` `environment variable` for the first time.
@@ -207,17 +182,54 @@ If successful, it does not return. If there is an error, it returns -1. This fun
   
 If `execve()` is successful, no code after it will be considered. We use the if clause `if (execve(path, cmd, envp) == -1)` to free both `*path` and `**cmd` and to print an error to `stderr` in case it fails.
 
-
-
  # Managing errors, error codes and cleaning up.
 
-#metion path variable.
+ When a system call or library function encounters an error, it usually sets the global variable `errno` to a positive integer that corresponds to the error that occurred.
+ 
+ The `perror()` function takes this `errno` value and displays its corresponding string description, preceded by the string you give to `perror().`
 
-#error managing, stderr, exit() function
+`ft_error()`: Calls perror() to display the last error message and then exits the program with the `EXIT_FAILURE` status.
 
-#check if anything is left open
+`path_error()`: Prints an error message to the standard error (file descriptor 2), indicating that the given command str was not found, then exits with a status of 127. 
 
-#allowed functions
+The exit code 127 is commonly used in shells to indicate that a command was not found.
+- EXIT_SUCCESS is typically defined as 0, indicating success.
+- EXIT_FAILURE is an implementation-defined non-zero value, which indicates failure. In most implementations, it's defined as 1.
 
-#program arguments vs system arguments
+## Signal Flow
+
+stdin   
+   │
+   ▼
+filein ───────┐  (opened by main function using open())
+   │          │
+   ▼          │
+stdout ───┬───┘ (via dup2(*filein, STDIN_FILENO);)
+          │
+          ▼
+        fd[1] ───────────┐  (write end of first pipe, set in child() using pipe())
+          │              │
+          ▼              │
+stdout (of 1st child) ───┤ (via dup2(fd[1], STDOUT_FILENO); in child())
+          │              │
+          ▼              │
+        fd[0] ───────────┘ (read end of first pipe)
+          │
+          ▼
+stdout (of 2nd child) ────┬───┐ (via dup2(fd[1], STDOUT_FILENO); in 2nd child())
+          │               │   │
+          ▼               │   │
+        fd[1] ────────────┘   │ (write end of second pipe, set in 2nd child using pipe())
+          │                   │
+          ▼                   │
+stdout (of nth child) ────────┘
+          │
+          ▼
+fileout (redirected by main)
+   │
+   ▼
+stdout (via dup2(fileout, STDOUT_FILENO); in main)
+
+
+
 
