@@ -64,9 +64,9 @@ The `0644` sets the file permisions for `O_CREAT` when creating a new file.
 
 After setting up our source and destination we can start running the child commands; `while (i < argc - 2)` -> `child(argv[i++], envp);`
   
-Within the child function is where things get more messy, we need to understand what a pipe is and how it works, and also how the code readability is affected after using functions like `fork()` and `execve()`.
+Within the child function is where we will first encounter `**envp``pipe()` `fork()` and `execve()`.
   
-Similiar to what we did before with `filein` and `fileout` we will use  `pipe()` on an array of two ints and use them as file descriptors, one for reading, one for writting.
+Similiar to what we did before with `filein` and `fileout` we will use `pipe()` on an array of two ints and use them as file descriptors, one for reading, one for writting.
 	
 	int		fd[2];
 	if (pipe(fd) == -1)
