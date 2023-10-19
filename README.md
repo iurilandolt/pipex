@@ -22,7 +22,7 @@ The program's arguments in comparison to the system's terminal arguments are:
 
 `<< eof cmd1 | cmd2 | cmd3 ... | cmdn > file2`
 
-## opening the correct files and storing their given file descriptors. 
+## Opening the correct files and storing their given file descriptors. 
 
 These will be the first and last argument of the ./pipex call.
 
@@ -40,7 +40,7 @@ The function `file_input()` serves as a starting step to set up the data flow fo
 
 `*filein = open(argv[1], O_RDONLY, 0644);`  We use `open()` to store the file descriptor of the input file given by the user; `argv[1]`.
 
-Having access to the input file we can now redirect the standard input `(STDIN_FILENO)` to read from `filein`, with:
+### Redirecting the standard input `(STDIN_FILENO)` to read from `filein`, with:
 
 	dup2(*filein, STDIN_FILENO);
 
@@ -53,7 +53,7 @@ Before moving on we also set up our final destination, the output file, with;
 These flags `O_WRONLY | O_CREAT | O_TRUNC` specify the type of access we want to have to the file, in this case we want to write to the file, create it if it doesn't exist and overwrite it's content if it already exists.
 The `0644` sets the file permisions for `O_CREAT` when creating a new file.
 
-Moving on to executing our first command, subsequent commands and final command. In a nutshell, it would look something like this:
+## Executing our first command, subsequent commands and final command. In a nutshell, it would look something like this:
 		
 	  int main(int argc, char **argv, char **envp) {
    		file_input(argc, argv, &filein, &fileout);
