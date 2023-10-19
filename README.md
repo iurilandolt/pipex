@@ -1,5 +1,6 @@
 
 # pipex 
+
 This program replicates the functionality of Unix terminal pipes `|`. 
 
 It accepts input from a `file`, from the output of a `terminal command`, or through the `"here_doc"` `<<` method. 
@@ -196,12 +197,46 @@ The exit code 127 is commonly used in shells to indicate that a command was not 
 - `EXIT_SUCCESS` is typically defined as 0, indicating success.
 - `EXIT_FAILURE` is an implementation-defined non-zero value, which indicates failure. In most implementations, it's defined as 1.
 
+## Alternative input `<<` `here_doc`
+
+Alternatively we can use the input from the from the unix `<<` `here_doc` functionality `if (ft_strnstr(argv[1], "here_doc", 8) != 0 && argc > 5)`
+
+	int	terminal_input(int argc, char **argv, int *fileout)
+	{
+		*fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (*fileout == -1)
+			ft_error();
+		call_doc(argv);
+		return (3);
+	}
+ The `call_doc()` basically uses input from the `get_line()` to write into `fd[1]` during the child process with;`ft_putstr_fd(line, fd[1]);`.
+ 	
+  	if (proc_id == 0)
+	{
+		while (get_line(&line) > 0)
+		{
+			ft_putstr_fd(line, fd[1]);
+			if (ft_strnstr(line, argv[2], ft_strlen(line)) != 0)
+				exit(0);
+			free(line);
+		}
+	}
+ In the parent process, like bofore, we wait for the child process to end with `waitpid(*id, NULL, 0);`, close the write end of the pipe with `close(fd[1])`, and set `STDIN_FILENO` to receive input from `fd[0]`. 
+ 
+ 	else
+  	{
+		waitpid(*id, NULL, 0);
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+	}
+
 ## Signal Flow
 ```
 stdin   
    │
    ▼
 filein ───────┐  (opened by main function using open())
+/ here_doc    |
    │          │
    ▼          │
 stdout ───┬───┘ (via dup2(*filein, STDIN_FILENO);)
