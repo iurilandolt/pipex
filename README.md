@@ -185,27 +185,27 @@ We need these directores in order to run `execve()`, the execve() function repla
 If successful, it does not return;  If there is an error, returns -1. This function takes three arguments; 
 
 - A string representing the path to the executable,
-- A NULL-terminated array of string pointers representing the command and it's arguments <sub>if the command is "ls -a" we use `split()`</sub>
+- A NULL-terminated array of string pointers representing the command and it's arguments <sub>(if the command is "ls -a" we use `split()`)</sub>
 - A pointer to the environment variables `**envp`.
  
- 	void	execute(char *argv, char **envp)
-	{
-		char	**cmd;
-		char	*path;
-	
-		cmd = ft_split(argv, ' ');
-		if (!cmd)
-			ft_error();
-		path = find_path(envp, *cmd);
-		if (!path)
-			path_error(argv);
-		if (execve(path, cmd, envp) == -1)
+		void	execute(char *argv, char **envp)
 		{
-			free(path);
-			clear(cmd);
-			ft_error();
+			char	**cmd;
+			char	*path;
+		
+			cmd = ft_split(argv, ' ');
+			if (!cmd)
+				ft_error();
+			path = find_path(envp, *cmd);
+			if (!path)
+				path_error(argv);
+			if (execve(path, cmd, envp) == -1)
+			{
+				free(path);
+				clear(cmd);
+				ft_error();
+			}
 		}
-	}
 
  # Managing errors, debbuging and cleaning up.
 
