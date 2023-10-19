@@ -126,6 +126,32 @@ After the last child() iteration ends, control returns to the main function. Her
 	dup2(fileout, STDOUT_FILENO);
 	execute(argv[argc - 2], envp);
 
+ Here's a quick look at what the signal flow looks like in a txt based grap ^^
+
+	 stdin     -->     filein (opened by main function)
+	                    |
+	                    v (via dup2(*filein, STDIN_FILENO);)
+	stdout    -->     fd[1] (write end of first pipe, set in child())
+	                    |
+	                    v (via dup2(fd[1], STDOUT_FILENO); in child())
+	fd[0] (read end of first pipe)
+	                    |
+	                    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
+	stdout (of first child)    -->     fd[1] (write end of second pipe)
+	                    |
+	                    v (via dup2(fd[1], STDOUT_FILENO); in next child())
+	fd[0] (read end of second pipe)
+	                    |
+	                    v (via dup2(fd[0], STDIN_FILENO); in parent or main)
+	...     ...     ...
+	stdout (of nth child)      -->     fd[1] (write end of nth pipe)
+	                    |
+	                    v (via dup2(fd[1], STDOUT_FILENO); in nth child())
+	fileout (redirected by main)
+	                    |
+	                    v (via dup2(fileout, STDOUT_FILENO); in main)
+
+
 
 ## Execute(), `execve()` and `PATH` 
 
