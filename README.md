@@ -211,7 +211,10 @@ Alternatively we can use the input from the from the unix `<<` `here_doc` functi
 	}
  The `call_doc()` basically uses input from the `get_line()` to write into `fd[1]` during the child process with;`ft_putstr_fd(line, fd[1]);`.
  	
-  	if (proc_id == 0)
+  	proc_id = fork();
+	if (proc_id == -1)
+		ft_error();	
+  	 if (proc_id == 0)
 	{
 		while (get_line(&line) > 0)
 		{
@@ -221,7 +224,7 @@ Alternatively we can use the input from the from the unix `<<` `here_doc` functi
 			free(line);
 		}
 	}
- In the parent process, like bofore, we wait for the child process to end with `waitpid(*id, NULL, 0);`, close the write end of the pipe with `close(fd[1])`, and set `STDIN_FILENO` to receive input from `fd[0]`. 
+ And in the parent process, like bofore, we wait for the child process to end with `waitpid(*id, NULL, 0);`, close the write end of the pipe with `close(fd[1])`, and set `STDIN_FILENO` to receive input from `fd[0]`. 
  
  	else
   	{
@@ -263,8 +266,4 @@ stdout (of nth child) ────────┘
 fileout (redirected by main)
    │
    ▼
-stdout (via dup2(fileout, STDOUT_FILENO); in main) ```
-
-
-
-
+stdout (via dup2(fileout, STDOUT_FILENO); in main) 
