@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:15:58 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 22:31:14 by rlandolt         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:32:21 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	*clear(char **array)
 	i = 0;
 	while (array[i])
 		free(array[i++]);
+	free(array[i]);
 	free(array);
 	return (NULL);
 }
