@@ -275,4 +275,4 @@ stdout (of nth child) ────────┘
 fileout (redirected by main)
    │
    ▼
-stdout (via dup2(fileout, STDOUT_FILENO); in main) 
+stdout (via dup2(fileout, STDOUT_FILENO); in main)
