@@ -6,7 +6,7 @@
 /*   By: rlandolt <rlandolt@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 21:25:13 by rlandolt          #+#    #+#             */
-/*   Updated: 2023/10/15 22:32:34 by rlandolt         ###   ########.fr       */
+/*   Updated: 2024/02/19 11:54:26 by rlandolt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,11 @@ char	*find_path(char **envp, char *cmd)
 	char	*program;
 
 	i = 0;
+
 	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
+	if (!envp[i])
+		return (NULL);
 	paths = ft_split(envp[i] + 5, ':');
 	validate_path(paths, &cmd);
 	i = 0;
